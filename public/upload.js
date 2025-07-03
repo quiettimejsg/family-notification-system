@@ -30,9 +30,11 @@ const ALLOWED_MIME_TYPES = [
   'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-  'text/plain', 'video/mp4', 'audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/flac', 'audio/x-flac'
+  'text/plain', 'video/mp4', 'video/x-m4v', 'audio/mp4', 'audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/flac', 'audio/x-flac'
 ];
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
+
+
 
 // 文件类型图标映射
 const FILE_ICONS = {
@@ -57,6 +59,7 @@ function handleFileSelect(event) {
   if (isProgrammaticUpdate) return;
   
   const newFiles = Array.from(event.target.files).filter(file => {
+    console.log(`检查文件: ${file.name}, 类型: ${file.type}, 大小: ${file.size}`);
   // 验证文件类型
   if (!ALLOWED_MIME_TYPES.includes(file.type)) {
     console.warn(`文件 ${file.name} 类型不支持: ${file.type}`);
@@ -273,9 +276,7 @@ function finalizeIconPreview(file, preview) {
   `);
 }
 
-function getFileExtension(filename) {
-  return filename.split('.').pop().toLowerCase();
-}
+// 移除重复声明
 
 function removeFilePreview(file, preview) {
   // 释放对象URL资源
@@ -336,7 +337,9 @@ export {
 // 同时添加这个函数（用于外部添加文件）
 function addFiles(files) {
   const validFiles = files.filter(file => {
-    if (!ALLOWED_MIME_TYPES.includes(file.type)) {
+    const ext = getFileExtension(file.name);
+    const allowedExtensions = ['mp4', 'm4v', 'flac', 'mp3', 'wav', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'jpg', 'jpeg', 'png', 'gif'];
+    if (!ALLOWED_MIME_TYPES.includes(file.type) && !allowedExtensions.includes(ext)) {
       console.warn(`文件 ${file.name} 类型不支持: ${file.type}`);
       return false;
     }
@@ -349,6 +352,8 @@ function addFiles(files) {
 
   if (validFiles.length > 0) {
     window.selectedFiles = [...window.selectedFiles, ...validFiles];
+    console.log('添加文件后全局文件列表:', window.selectedFiles);
+    console.log('添加文件后全局文件数量:', window.selectedFiles.length);
     batchPreviewFiles(validFiles);
     updateFileInput();
   }
