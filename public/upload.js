@@ -96,13 +96,16 @@ function handleFileSelect(event) {
 }
 
 function batchPreviewFiles(files) {
+  const previewContainer = document.getElementById('filePreviews');
+  console.log('预览容器是否存在:', !!previewContainer);
+  console.log('准备为', files.length, '个文件创建预览');
   // 分块处理避免UI阻塞
   const CHUNK_SIZE = 3; // 每次处理3个文件
   let index = 0;
   
   function processChunk() {
     const chunk = files.slice(index, index + CHUNK_SIZE);
-    chunk.forEach(previewFile);
+    chunk.forEach(file => previewFile(file, previewContainer));
     index += CHUNK_SIZE;
     
     if (index < files.length) {
@@ -114,8 +117,8 @@ function batchPreviewFiles(files) {
   processChunk();
 }
 
-function previewFile(file) {
-  const preview = document.createElement('div');
+function previewFile(file, container) {
+  const preview = createPreviewElement(file, objectUrl, container);
   preview.className = 'file-preview';
   
   // 创建对象URL并存储映射关系
@@ -137,10 +140,11 @@ function previewFile(file) {
     </button>
   `;
   
-  if (filePreviews) {
-    filePreviews.appendChild(preview);
+  if (container) {
+    container.appendChild(preview);
+    console.log('预览元素已添加到容器');
   } else {
-    console.error('无法添加预览元素：filePreviews容器不存在');
+    console.error('无法添加预览元素：预览容器不存在');
     return;
   }
   
@@ -223,12 +227,14 @@ function createImageThumbnail(file, preview, objectUrl) {
 }
 
 function createVideoThumbnail(file, preview, objectUrl) {
+  console.log('开始创建视频缩略图:', file.name);
   const video = document.createElement('video');
   video.muted = true;
   video.playsInline = true;
   
   // 设置截取第一帧
   video.addEventListener('loadeddata', function() {
+    console.log('视频loadeddata事件触发，准备截取帧');
     this.currentTime = Math.min(this.duration * 0.1, 1); // 取10%处或1秒
   });
   
@@ -250,12 +256,15 @@ function createVideoThumbnail(file, preview, objectUrl) {
     video.src = '';
   });
   
-  video.addEventListener('error', () => {
+  video.addEventListener('error', (e) => {
+    console.error('视频加载错误:', e, '错误代码:', video.error.code);
     finalizeIconPreview(file, preview);
   });
   
   video.src = objectUrl;
+  console.log('视频源已设置，开始加载:', objectUrl);
   video.load();
+  console.log('视频load()已调用');
 }
 
 function finalizePreview(preview, contentHtml) {
