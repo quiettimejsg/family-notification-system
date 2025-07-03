@@ -1,7 +1,7 @@
-[中文](#zh) * [English](#en)
+[文言](#zh) * [OE](#en)
 <a id="zh"></a>
 
-# 家府通傳之制（Family Notification System）
+# 家府通傳之制
 
 ## 項目要略
 家府通傳之制者，乃戶內訊息傳遞之輕簡網頁應用也。具多語切換、文牘附件上呈、通牒品級分判、天時顯像諸能，助族人高效共享要聞。
@@ -76,7 +76,7 @@ AGPL-3.0 License
 ---
 <a id="en"></a>
 
-# Þæs Hīredes Bodcræft (The Household's Message-Craft)
+# Þæs Hīredes Bodcræft
 
 ## Stafa Gehwyrft
 Þes Hīredes Bodcræft is lytel webb-geweorc for bodena gearnunga betwēonan hīwum. Hē hæfþ manigfealde cræftas, swelce missenlicu gereordu, boda hāda tōdǣlung, īecnung mid gewritum, and wederes īewung, þæt hē fultumie þǣm hīredmenn tō dǣlenne hefige bodan hrædlīce.

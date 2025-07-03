@@ -94,16 +94,13 @@ function displayWeather(data) {
 
   // 构建天气HTML
   const weatherHtml = `
-    <div class="weather-info">
-      <div class="location">${data.city}</div>
-      <div class="temperature">
-        <span class="material-icons weather-icon">${icon}</span>
-        <span class="temp-value">${temp}</span>
-        <span class="temp-unit" id="tempUnitToggle">${useCelsius ? '°C' : '°F'}</span>
-      </div>
-      <div class="condition">${translations[`weather-${weatherCondition}`]?.[langState.current] || todayWeather.weather}</div>
-      <div class="details">${translations['wind']?.[langState.current] || 'Wind'}: ${todayWeather.wind}</div>
+    <div class="weather-info" style="display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; white-space: nowrap;">
+    <div class="temperature" style="display: flex; align-items: center; flex: none;">
+      <span class="material-icons weather-icon">${icon}</span>
+      <span class="temp-value">${temp}</span>
     </div>
+    <div class="condition" style="flex: none;">${translations[`weather-${weatherCondition}`]?.[langState.current] || todayWeather.weather}</div>
+  </div>
   `;
 
   weatherContainer.innerHTML = weatherHtml;
