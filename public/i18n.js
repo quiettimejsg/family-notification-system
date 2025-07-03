@@ -1,221 +1,212 @@
 // 多语言字典（添加所有必需的键）
 const translations = {
-  "app-title": {
-    "zh": "通知系統",
-    "en": "NotifSys"
-  },
-  
-  "priority-high": {
-    "zh": "紧急",
-    "en": "High"
-  },
-  "priority-medium": {
-    "zh": "迫切",
-    "en": "Medium"
-  },
-  "priority-low": {
-    "zh": "一般",
-    "en": "Low"
-  },
-  "document": {
-    "zh": "文件",
-    "en": "Document"
-  },
-  "audio": {
-    "zh": "音訊",
-    "en": "Audio"
-  },
-  // 添加缺失的翻译键
-  "error": {
-    "zh": "錯誤",
-    "en": "Error"
-  },
-  "success": {
-    "zh": "成功",
-    "en": "Success"
-  },
-  "uploading": {
-    "zh":  "上傳中...",
-    "en": "Uploading..."
-  },
-  "loading": {
-    "zh":  "載入中...",
-    "en": "Loading..."
-  },
-  "load-error": {
-    "zh": "載入通知失敗",
-    "en": "Failed to load notifications"
-  },
-  "no-notifications": {
-    "zh":  "暫無通知",
-    "en": "No notifications yet"
-  },
-  "weather-loading": {
-    "zh": "正在加载天气...",
-    "en": "Loading weather..."
-  },
-  "weather-error": {
-    "zh": "天气加载失败",
-    "en": "Failed to load weather"
-  },
-  "geolocation-error": {
-    "zh": "获取地理位置失败，请允许位置权限或使用默认城市",
-    "en": "Failed to get location. Please allow location permissions or use default city"
-  },
-  "current-location": {
-    "zh": "当前位置",
-    "en": "Current Location"
-  },
-  "search-city": {
-    "zh": "搜索城市...",
-    "en": "Search city..."
-  },
-  "weather-sunny": {
-      "zh": "晴",
-      "en": "Sunny"
-    },
-    "weather-moderate-rain": {
-      "zh": "中雨",
-      "en": "Moderate Rain"
-    },
-    "weather-thunderstorm-cloudy": {
-      "zh": "雷阵雨转多云",
-      "en": "Thunderstorm turning to Cloudy"
-    },
-    "weather-cloudy-thunderstorm": {
-      "zh": "多云转雷阵雨",
-      "en": "Cloudy turning to Thunderstorm"
-    },
-    "weather-sunny-cloudy": {
-      "zh": "晴转多云",
-      "en": "Sunny turning to Cloudy"
-    },
-    "weather-cloudy-sunny": {
-      "zh": "多云转晴",
-      "en": "Cloudy turning to Sunny"
-    },
-    "weather-heavy-rain": {
-      "zh": "暴雨",
-      "en": "Heavy Rain"
-    },
-    "weather-showers": {
-      "zh": "阵雨",
-      "en": "Showers"
-    },
-    "weather-overcast-cloudy": {
-      "zh": "阴转多云",
-      "en": "Overcast turning to Cloudy"
-    },
-  "weather-cloudy": {
-    "zh": "多云",
-    "en": "Cloudy"
-  },
-  "weather-sunny-to-cloudy": {
-    "zh": "晴转多云",
-    "en": "Sunny to Cloudy"
-  },
-  "weather-rainy": {
-    "zh": "雨",
-    "en": "Rainy"
-  },
-  "weather-overcast": {
-    "zh": "阴",
-    "en": "Overcast"
-  },
-  "weather-snowy": {
-    "zh": "雪",
-    "en": "Snowy"
-  },
-  "weather-light-rain": {
-    "zh": "小雨",
-    "en": "Light Rain"
-  },
-  "weather-heavy-rain": {
-    "zh": "大雨",
-    "en": "Heavy Rain"
-  },
-  "weather-thunderstorm": {
-    "zh": "雷阵雨",
-    "en": "Thunderstorm"
-  },
-  "weather-light-snow": {
-    "zh": "小雪",
-    "en": "Light Snow"
-  },
-  "weather-heavy-snow": {
-    "zh": "大雪",
-    "en": "Heavy Snow"
-  },
-  "weather-foggy": {
-    "zh": "雾",
-    "en": "Foggy"
-  },
-  "weather-unknown": {
-    "zh": "未知",
-    "en": "Unknown"
-  },
-  "add-record-title": {
-    "zh": "添加新记录",
-    "en": "Add New Record"
-  },
-  "record-title-label": {
-    "zh": "标题",
-    "en": "Title"
-  },
-  "record-content-label": {
-    "zh": "内容",
-    "en": "Content"
-  },
-  "priority-low-label": {
-    "zh": "一般",
-    "en": "Low"
-  },
-  "priority-medium-label": {
-    "zh": "迫切",
-    "en": "Medium"
-  },
-  "priority-high-label": {
-    "zh": "紧急",
-    "en": "High"
-  },
-  "submit-btn": {
-    "zh": "提交",
-    "en": "Submit"
-  },
-  "file-input-label": {
-    "zh": "上传文件",
-    "en": "Upload Files"
-  },
-  "preview-failed": {
-    "zh": "预览失败，请尝试下载",
-    "en": "Preview failed, please try to download"
-  },
-  "unsupported-preview": {
-    "zh": "不支持直接预览此类型",
-    "en": "Direct preview of this type is not supported"
-  },
-  "view-in-browser": {
-    "zh": "在浏览器中预览",
-    "en": "View in browser"
-  },
-  "default-city": {
-    "zh": "苏州",
-    "en": "苏州"
-  },
-  "network-error": {
-    "zh": "网络响应异常",
-    "en": "Network response was not ok"
-  },
-  "error-adding-notification": {
-    "zh": "添加通知失败",
-    "en": "Failed to add notification"
-  },
-  "unnamed-file": {
-    "zh": "未命名文件",
-    "en": "unknown file"
-  }
+"app-title": {
+"zh": "通知系統",
+"en": "Notifsys"
+},
+"priority-high": {
+"zh": "急",
+"en": "Hēah"
+},
+"priority-medium": {
+"zh": "迫",
+"en": "Middling"
+},
+"priority-low": {
+"zh": "常",
+"en": "Lāg"
+},
+"document": {
+"zh": "文牘",
+"en": "Writ"
+},
+"audio": {
+"zh": "音訊",
+"en": "Sōnd"
+},
+"error": {
+"zh": "謬",
+"en": "Errour"
+},
+"success": {
+"zh": "成",
+"en": "Sið"
+},
+"uploading": {
+"zh": "上傳中...",
+"en": "Uplǣdan…"
+},
+"loading": {
+"zh": "載入中...",
+"en": "Lǣdan…"
+},
+"load-error": {
+"zh": "載入告諭敗",
+"en": "Lǣde tō notifys hæfde nǣt"
+},
+"no-notifications": {
+"zh": "闕告諭",
+"en": "Nǣnne notifs yǣt"
+},
+"weather-loading": {
+"zh": "候氣載入中...",
+"en": "Lǣdan weder…"
+},
+"weather-error": {
+"zh": "候氣載入敗",
+"en": "Weder lǣde wæs forworpen"
+},
+"geolocation-error": {
+"zh": "獲輿圖敗，請允定位權或用常邑",
+"en": "Nǣte tō habban londstede; lǣt stede beþafunges oþþe brūc foresette burh"
+},
+"current-location": {
+"zh": "現方所",
+"en": "Nūstede"
+},
+"search-city": {
+"zh": "索邑...",
+"en": "Sēċ burh…"
+},
+"weather-sunny": {
+"zh": "暘",
+"en": "Sunnig"
+},
+// 天象詞皆從簡化文言
+"weather-moderate-rain": {
+"zh": "霔",
+"en": "Middel Ren"
+},
+"weather-thunderstorm-cloudy": {
+"zh": "雷霔轉曇",
+"en": "Þunorstorm wendþ tō Clūdlic"
+},
+"weather-cloudy-thunderstorm": {
+"zh": "曇轉雷霔",
+"en": "Clūdlic wendþ tō Þunorstorm"
+},
+"weather-sunny-cloudy": {
+"zh": "暘轉曇",
+"en": "Sunnig wendþ tō Clūdlic"
+},
+"weather-cloudy-sunny": {
+"zh": "曇轉暘",
+"en": "Clūdlic wendþ tō Sunnig"
+},
+"weather-heavy-rain": {
+"zh": "澍",
+"en": "Hefig Ren"
+},
+"weather-showers": {
+"zh": "霂",
+"en": "Scūr"
+},
+"weather-overcast-cloudy": {
+"zh": "靉轉曇",
+"en": "Ofercast wendþ tō Clūdlic"
+},
+"weather-cloudy": {
+"zh": "曇",
+"en": "Clūdlic"
+},
+"weather-rainy": {
+"zh": "霑",
+"en": "Renig"
+},
+"weather-overcast": {
+"zh": "靉",
+"en": "Ofercast"
+},
+"weather-snowy": {
+"zh": "霙",
+"en": "Snāwlic"
+},
+"weather-light-rain": {
+"zh": "霡",
+"en": "Lēoht Ren"
+},
+"weather-thunderstorm": {
+"zh": "雷霔",
+"en": "Þunorstorm"
+},
+"weather-light-snow": {
+"zh": "霰",
+"en": "Lēoht Snāw"
+},
+"weather-heavy-snow": {
+"zh": "霏",
+"en": "Hefig Snāw"
+},
+"weather-foggy": {
+"zh": "雺",
+"en": "Mistig"
+},
+"weather-unknown": {
+"zh": "未詳",
+"en": "Uncuð"
+},
+"add-record-title": {
+"zh": "新立錄",
+"en": "Tōgædre Nīwe Writ"
+},
+"record-title-label": {
+"zh": "標",
+"en": "Hēafod"
+},
+"record-content-label": {
+"zh": "文",
+"en": "Inhold"
+},
+// 優先級標籤從簡
+"priority-low-label": {
+"zh": "常",
+"en": "Lāg"
+},
+"priority-medium-label": {
+"zh": "迫",
+"en": "Middling"
+},
+"priority-high-label": {
+"zh": "急",
+"en": "Hēah"
+},
+"submit-btn": {
+"zh": "呈",
+"en": "Āsenda"
+},
+"file-input-label": {
+"zh": "進文牘",
+"en": "Uplǣdan Writ"
+},
+"preview-failed": {
+"zh": "預覽隳，試下之",
+"en": "Forsīen misspǣd, sēc eft niðerlǣdan"
+},
+"unsupported-preview": {
+"zh": "類異不可預覽",
+"en": "Ne fremode forsīen þes cyndes"
+},
+"view-in-browser": {
+"zh": "於瀏覽器觀",
+"en": "Sīeh in brūscāre"
+},
+"default-city": {
+"zh": "苏州", // 依令不改
+"en": "苏州"
+},
+"network-error": {
+"zh": "絡訊異常",
+"en": "Netwyrċ andswaru wæs nǣt rihte"
+},
+"error-adding-notification": {
+"zh": "添告諭敗",
+"en": "Tōgædre notifys wæs forworpen"
+},
+"unnamed-file": {
+"zh": "未名文",
+"en": "Nǣmleās writ"
+}
 };
-
 // 优先从localStorage读取，否则使用浏览器语言
 export const langState = {
   current: localStorage.getItem('preferredLang') || navigator.language.split('-')[0] || 'en'

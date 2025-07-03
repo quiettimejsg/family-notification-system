@@ -4,16 +4,16 @@ import { langState } from './i18n.js';
 let currentCity;
 let useCelsius = true;
 
-// 天气状况图标映射
+// 天气状况图标映射（中文）
 const weatherIcons = {
-  'clear': 'wb_sunny',
-  'clouds': 'cloud',
-  'rain': 'umbrella',
-  'snow': 'ac_unit',
-  'thunderstorm': 'flash_on',
-  'mist': 'cloud_queue',
-  'fog': 'cloud_queue',
-  'haze': 'cloud_queue',
+  '晴': 'wb_sunny',
+  '多云': 'cloud',
+  '阴': 'cloud',
+  '雨': 'umbrella',
+  '雪': 'ac_unit',
+  '雷': 'flash_on',
+  '雾': 'cloud_queue',
+  '霾': 'cloud_queue',
   'default': 'help_outline'
 };
 
@@ -26,7 +26,7 @@ export function initWeather() {
   }
 
   // 获取默认城市
-  currentCity = translations['default-city'][langState.current];
+  currentCity = translations['default-city']?.[langState.current] || '苏州';
 
   // 绑定温度单位切换事件
   const tempUnitToggle = document.getElementById('tempUnitToggle');
@@ -59,14 +59,15 @@ export async function fetchWeather(city) {
   const weatherContainer = document.getElementById('weather-info');
   if (!weatherContainer) return;
 
-  weatherContainer.innerHTML = `<div class="loading-text">${translations['weather-loading'][langState.current] || 'Loading weather...'}</div>`;
+  weatherContainer.innerHTML = `<div class="loading-text">${translations['weather-loading']?.[langState.current] || 'Loading weather...'}</div>`;
 
   try {
     const response = await fetch(`/api/weather?city=${encodeURIComponent(city)}`);
     if (!response.ok) throw new Error(translations['weather-load-error']?.[langState.current] || 'Failed to load weather');
 
-    const weatherData = await response.json();
-    displayWeather(weatherData);
+    const responseData = await response.json();
+const weatherData = responseData.success ? responseData.data : null;
+displayWeather(weatherData);
   } catch (error) {
     console.error('获取天气错误:', error);
     weatherContainer.innerHTML = `<div class="error">${translations['weather-load-error']?.[langState.current] || 'Failed to load weather'}</div>`;
@@ -76,33 +77,32 @@ export async function fetchWeather(city) {
 // 显示天气信息
 function displayWeather(data) {
   const weatherContainer = document.getElementById('weather-info');
-  if (!weatherContainer || !data) return;
-
-  // 检查必要的数据字段
-  if (!data.main || !data.weather || !data.weather[0]) {
+  if (!weatherContainer || !data || !data.data || !data.data.length) {
     weatherContainer.innerHTML = `<div class="error">${translations['weather-load-error']?.[langState.current] || 'Failed to load weather'}</div>`;
     return;
   }
 
   // 转换温度单位
-  const temp = useCelsius ? data.main.temp : (data.main.temp * 9/5 + 32).toFixed(1);
-  const feelsLike = useCelsius ? data.main.feels_like : (data.main.feels_like * 9/5 + 32).toFixed(1);
+  const todayWeather = data.data[0];
+  // 提取温度数值并转换单位
+  const tempValue = parseFloat(todayWeather.temperature.replace('℃', ''));
+  const temp = useCelsius ? `${tempValue}℃` : `${(tempValue * 9/5 + 32).toFixed(1)}°F`;
 
   // 获取天气图标
-  const weatherCondition = data.weather[0].main.toLowerCase();
+  const weatherCondition = todayWeather.weather.toLowerCase();
   const icon = weatherIcons[weatherCondition] || weatherIcons['default'];
 
   // 构建天气HTML
   const weatherHtml = `
     <div class="weather-info">
-      <div class="location">${data.name}, ${data.sys.country}</div>
+      <div class="location">${data.city}</div>
       <div class="temperature">
         <span class="material-icons weather-icon">${icon}</span>
         <span class="temp-value">${temp}</span>
         <span class="temp-unit" id="tempUnitToggle">${useCelsius ? '°C' : '°F'}</span>
       </div>
-      <div class="condition">${translations[`weather-${weatherCondition}`][langState.current] || data.weather[0].description}</div>
-      <div class="details">${translations['feels-like'][langState.current]}: ${feelsLike}${useCelsius ? '°C' : '°F'} | ${translations['humidity'][langState.current]}: ${data.main.humidity}%</div>
+      <div class="condition">${translations[`weather-${weatherCondition}`]?.[langState.current] || todayWeather.weather}</div>
+      <div class="details">${translations['wind']?.[langState.current] || 'Wind'}: ${todayWeather.wind}</div>
     </div>
   `;
 

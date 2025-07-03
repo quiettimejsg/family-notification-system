@@ -73,6 +73,8 @@ async function getWeatherData(cityName, days = 3) {
     });
 
     if (weatherData.length === 0) {
+      console.error('[天气服务] 提取天气数据为空，页面结构可能已变化');
+      console.error('[天气服务] 页面HTML片段:', response.data.substring(0, 500));
       throw new Error('未能提取天气数据，请检查页面结构是否变化');
     }
 

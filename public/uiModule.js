@@ -83,16 +83,41 @@ function bindUIEvents() {
 
 // 初始化城市列表
 function initCityList() {
-  cityListItems = document.querySelectorAll('#city-dropdown .city-item');
-  cityListItems.forEach(item => {
-    item.addEventListener('click', () => {
-      currentCity = item.dataset.city;
-      citySearchInput.value = item.textContent;
-      cityDropdown.classList.add('hidden');
-      // 通知天气模块更新城市
-      window.fetchWeather?.(currentCity);
-    });
-  });
+  // 从后端获取城市列表
+  fetch('/api/weather/cities')
+    .then(response => response.json())
+    .then(data => {
+      if (data && data.cities && data.cities.length) {
+        const dropdownContent = document.querySelector('#city-dropdown .dropdown-content');
+        if (dropdownContent) {
+          // 清空现有选项
+          dropdownContent.innerHTML = '';
+          
+          // 动态创建城市选项
+          data.cities.forEach(city => {
+            const cityItem = document.createElement('div');
+            cityItem.className = 'city-item';
+            cityItem.dataset.city = city.name;
+            cityItem.textContent = city.name;
+            
+            // 绑定点击事件
+            cityItem.addEventListener('click', () => {
+              currentCity = city.name;
+              citySearchInput.value = city.name;
+              cityDropdown.classList.add('hidden');
+              // 通知天气模块更新城市
+              window.fetchWeather?.(currentCity);
+            });
+            
+            dropdownContent.appendChild(cityItem);
+          });
+          
+          // 更新城市列表引用
+          cityListItems = document.querySelectorAll('#city-dropdown .city-item');
+        }
+      }
+    })
+    .catch(error => console.error('获取城市列表失败:', error));
 }
 
 // 处理城市搜索

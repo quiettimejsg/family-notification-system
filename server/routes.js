@@ -192,7 +192,7 @@ app.post('/api/notifications', upload, (req, res) => {
   // 获取支持的城市列表
   app.get('/api/weather/cities', (req, res) => {
     res.json({
-      cities: weatherService.cityCodes
+      cities: Object.entries(weatherService.cityCodes).map(([name, code]) => ({ name, code }))
     });
   });
 
@@ -223,38 +223,5 @@ app.post('/api/notifications', upload, (req, res) => {
         stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
       });
     }
-  });
-
-  // 设置测试数据
-  app.post('/api/set-test-data', (req, res) => {
-    db.run('DELETE FROM notifications', () => {
-      const notifications = [
-      ];
-      
-      const stmt = db.prepare(
-        'INSERT INTO notifications (title, content, priority) VALUES (?, ?, ?)'
-      );
-      
-      notifications.forEach(noti => {
-        stmt.run(noti.title, noti.content, noti.priority, function(err) {
-          if (err) return;
-          
-          noti.attachments.forEach((file, index) => {
-            const fileType = file.endsWith('.mp4') ? 'video' : 
-                             file.endsWith('.mp3') ? 'audio' :
-                             file.endsWith('.pdf') ? 'document' : 'image';
-            
-            db.run(
-              'INSERT INTO attachments (notification_id, type, path, original_name) VALUES (?, ?, ?, ?)',
-              [this.lastID, fileType, `${file}`, file]
-            );
-          });
-        });
-      });
-      
-      stmt.finalize(() => {
-        res.json({ message: '测试数据已添加' });
-      });
-    });
   });
 };
