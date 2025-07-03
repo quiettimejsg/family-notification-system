@@ -9,7 +9,7 @@ module.exports = (app, upload) => {
   // 创建通知
 // 修改文件上传路径处理
 app.post('/api/notifications', (req, res, next) => {
-  upload(req, res, (err) => {
+  upload.array('files')(req, res, (err) => {
     if (err) {
       return res.status(400).json({ error: err.message });
     }
@@ -19,6 +19,10 @@ app.post('/api/notifications', (req, res, next) => {
   try {
     const { title = '', content = '', priority = 'low' } = req.body;
     const files = req.files || [];
+    console.log('接收到的文件数量:', files.length);
+    files.forEach((file, index) => {
+      console.log(`文件 ${index + 1}:`, file.originalname, file.size, file.mimetype);
+    });
     
     // 插入通知
     const notificationId = await new Promise((resolve, reject) => {
@@ -35,7 +39,7 @@ app.post('/api/notifications', (req, res, next) => {
     // 处理附件
     if (files.length > 0) {
       const stmt = db.prepare(
-        'INSERT INTO attachments (notification_id, type, path, original_name, size) VALUES (?, ?, ?, ?, ?)'
+        'INSERT INTO attachments (notification_id, type, path, original_name, size, uploaded_at) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)'
       );
       
       const promises = files.map(file => {

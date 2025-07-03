@@ -80,10 +80,14 @@ const db = new sqlite3.Database('./notifications.db', (err) => {
             });
           });
         });
-        });
+      });
       }
     });
-  
+  });
+
+module.exports = db;
+
+  // 在notifications表创建完成后再创建attachments表
   db.run(`
     CREATE TABLE IF NOT EXISTS attachments (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -92,14 +96,49 @@ const db = new sqlite3.Database('./notifications.db', (err) => {
       path TEXT NOT NULL,
       original_name TEXT NOT NULL,
       size INTEGER NOT NULL DEFAULT 0,
-      uploaded_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      uploaded_at DATETIME,
       FOREIGN KEY(notification_id) REFERENCES notifications(id) ON DELETE CASCADE
     )
-  `);
+  `, (err) => {
+    if (err) {
+      console.error('创建attachments表错误:', err);
+      return;
+    }
+    console.log('attachments表创建成功或已存在');
 
-  // 添加缺失的列（用于现有数据库）
-  db.run(`ALTER TABLE attachments ADD COLUMN IF NOT EXISTS size INTEGER NOT NULL DEFAULT 0`);
-  db.run(`ALTER TABLE attachments ADD COLUMN IF NOT EXISTS uploaded_at DATETIME DEFAULT CURRENT_TIMESTAMP`);
+    // 检查并添加缺失的列（用于现有数据库）
+    db.all(`PRAGMA table_info(attachments)`, (err, columns) => {
+    if (err) {
+      console.error('获取附件表结构错误:', err);
+      return;
+    }
+    
+    const columnNames = columns.map(col => col.name);
+    
+    // 添加size列（如果不存在）
+    if (!columnNames.includes('size')) {
+      db.run(`ALTER TABLE attachments ADD COLUMN size INTEGER NOT NULL DEFAULT 0`, (err) => {
+        if (err) console.error('添加size列错误:', err);
+        else console.log('成功添加size列');
+      });
+    }
+    
+    // 添加uploaded_at列（如果不存在）
+    if (!columnNames.includes('uploaded_at')) {
+      // SQLite不允许添加带非常量默认值的列，分两步处理
+      db.run(`ALTER TABLE attachments ADD COLUMN uploaded_at DATETIME`, (err) => {
+        if (err) {
+          console.error('添加uploaded_at列错误:', err);
+          return;
+        }
+        // 设置现有行的默认值
+        db.run(`UPDATE attachments SET uploaded_at = CURRENT_TIMESTAMP WHERE uploaded_at IS NULL`, (err) => {
+          if (err) console.error('更新uploaded_at默认值错误:', err);
+          else console.log('成功添加并初始化uploaded_at列');
+        });
+      });
+    }
+  });
   
 });
 

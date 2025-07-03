@@ -67,7 +67,9 @@ async function handleFormSubmit(e) {
   formData.append('priority', priority);
 
   // 添加所有选中的文件
-  selectedFiles.forEach(file => {
+  console.log('准备上传的文件数量:', selectedFiles.length);
+  selectedFiles.forEach((file, index) => {
+    console.log(`添加文件 ${index + 1}:`, file.name, file.size);
     formData.append('files', file);
   });
 

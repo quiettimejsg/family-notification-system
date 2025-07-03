@@ -720,6 +720,23 @@
             margin-top: 20px;
         }
 
+        /* 文件预览容器样式 */
+        .file-preview-container {
+            display: flex !important;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+            min-height: 100px;
+            padding: 10px;
+            border: 1px dashed #ccc;
+            border-radius: 4px;
+            visibility: visible !important;
+            height: auto !important;
+            background-color: #fff;
+            position: relative;
+            z-index: 10;
+        }
+
         /* 文件预览样式 */
         .file-preview {
             position: relative;

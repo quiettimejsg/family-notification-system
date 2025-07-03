@@ -1,20 +1,35 @@
-const filePreviews = document.getElementById('filePreviews');
-const fileInput = document.getElementById('fileInput');
-fileInput.addEventListener('change', handleFileSelect);
-
 import { handleFileClick } from './modal.js';
 
 let selectedFiles = [];
-let isProgrammaticUpdate = false;
-// 存储对象URL用于后续释放
-let objectUrlMap = new WeakMap();
+  let isProgrammaticUpdate = false;
+  // 存储对象URL用于后续释放
+  let objectUrlMap = new WeakMap();
+    let filePreviews, fileInput;
+
+  // 等待DOM完全加载后再初始化
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOMContentLoaded事件触发，开始初始化文件上传元素');
+    filePreviews = document.getElementById('filePreviews');
+    fileInput = document.getElementById('fileInput');
+    console.log('获取元素结果:', { filePreviews: !!filePreviews, fileInput: !!fileInput });
+
+    if (fileInput) {
+      fileInput.addEventListener('change', handleFileSelect);
+    } else {
+      console.error('fileInput元素未找到');
+    }
+
+    if (!filePreviews) {
+      console.error('filePreviews容器未找到');
+    }
+  });
 // 允许的文件类型和大小限制（与后端保持一致）
 const ALLOWED_MIME_TYPES = [
   'image/jpeg', 'image/png', 'image/gif',
   'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-  'text/plain', 'video/mp4', 'audio/mpeg', 'audio/mp3', 'audio/wav',"audio/flac"
+  'text/plain', 'video/mp4', 'audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/flac', 'audio/x-flac'
 ];
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
 
@@ -35,6 +50,7 @@ const FILE_ICONS = {
 const MAX_PREVIEW_SIZE = MAX_FILE_SIZE; // 100MB
 
 function handleFileSelect(event) {
+  console.log('文件选择事件触发', event);
   if (isProgrammaticUpdate) return;
   
   const newFiles = Array.from(event.target.files).filter(file => {
@@ -53,16 +69,19 @@ function handleFileSelect(event) {
   return true;
 });
   
+  console.log('验证通过的文件数量:', newFiles.length);
   if (newFiles.length === 0) return;
 
   // 添加新文件到选中文件列表
   selectedFiles = [...selectedFiles, ...newFiles];
+  console.log('更新后选中的文件总数:', selectedFiles.length);
 
   // 创建DataTransfer对象
   const dataTransfer = new DataTransfer();
   selectedFiles.forEach(file => dataTransfer.items.add(file));
 
   // 批量预览新文件（异步分块处理）
+  console.log('开始批量预览文件');
   batchPreviewFiles(newFiles);
 
   // 更新文件输入框
@@ -112,7 +131,12 @@ function previewFile(file) {
     </button>
   `;
   
-  filePreviews.appendChild(preview);
+  if (filePreviews) {
+    filePreviews.appendChild(preview);
+  } else {
+    console.error('无法添加预览元素：filePreviews容器不存在');
+    return;
+  }
   
   // 绑定事件
   preview.addEventListener('click', () => handleFileClick([file], 0));
@@ -310,25 +334,22 @@ export {
 // 同时添加这个函数（用于外部添加文件）
 function addFiles(files) {
   const validFiles = files.filter(file => {
-  if (!ALLOWED_MIME_TYPES.includes(file.type)) {
-    console.warn(`文件 ${file.name} 类型不支持: ${file.type}`);
-    return false;
+    if (!ALLOWED_MIME_TYPES.includes(file.type)) {
+      console.warn(`文件 ${file.name} 类型不支持: ${file.type}`);
+      return false;
+    }
+    if (file.size > MAX_FILE_SIZE) {
+      console.warn(`文件 ${file.name} 超过大小限制`);
+      return false;
+    }
+    return true;
+  });
+
+  if (validFiles.length > 0) {
+    selectedFiles = [...selectedFiles, ...validFiles];
+    batchPreviewFiles(validFiles);
+    updateFileInput();
   }
-  if (file.size > MAX_FILE_SIZE) {
-    console.warn(`文件 ${file.name} 超过大小限制`);
-    return false;
-  }
+  return validFiles;
   return true;
-});
-
-// 检查文件总数限制
-if (selectedFiles.length + validFiles.length > 20) {
-  alert('最多只能上传20个文件');
-  return [];
-}
-  if (validFiles.length === 0) return;
-
-  selectedFiles = [...selectedFiles, ...validFiles];
-  updateFileInput();
-  batchPreviewFiles(validFiles);
 }
