@@ -4,7 +4,7 @@ console.log('[客户端] 加载时间:', new Date().toISOString());
 // 导入依赖模块
 import { translations, updateLanguage } from './i18n.js';
 import { handleFileClick } from './modal.js';
-import { selectedFiles, resetSelectedFiles } from './upload.js';
+import {  resetSelectedFiles } from './upload.js';
 import { langState } from './i18n.js';
 
 // 全局暴露必要方法

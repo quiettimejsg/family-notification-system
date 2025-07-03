@@ -1,6 +1,7 @@
 import { translations } from './i18n.js';
-import { selectedFiles, resetSelectedFiles } from './upload.js';
+import { resetSelectedFiles } from './upload.js';
 import { langState } from './i18n.js';
+
 
 let addRecordModal;
 let addRecordForm;
@@ -42,15 +43,14 @@ function bindEvents() {
   // 默认选中低优先级
   document.querySelector('.low-priority-btn')?.classList.add('active');
 
-  // 刷新按钮事件
-  document.getElementById('refreshBtn')?.addEventListener('click', loadNotifications);
-}
+    // 刷新按钮事件
+    document.getElementById('refreshBtn')?.addEventListener('click', loadNotifications);
+  }
 
-// 表单提交处理
-async function handleFormSubmit(e) {
-  e.preventDefault();
-
-  const title = document.getElementById('record-title')?.value;
+  // 表单提交处理
+  async function handleFormSubmit(e) {
+    e.preventDefault();
+    const title = document.getElementById('record-title')?.value;
   const content = document.getElementById('record-content')?.value;
   const priority = document.querySelector('.priority-btn.active')?.dataset.priority || 'low';
 
@@ -67,8 +67,8 @@ async function handleFormSubmit(e) {
   formData.append('priority', priority);
 
   // 添加所有选中的文件
-  console.log('准备上传的文件数量:', selectedFiles.length);
-  selectedFiles.forEach((file, index) => {
+  console.log('准备上传的文件数量:', window.selectedFiles.length);
+  window.selectedFiles.forEach((file, index) => {
     console.log(`添加文件 ${index + 1}:`, file.name, file.size);
     formData.append('files', file);
   });

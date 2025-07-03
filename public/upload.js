@@ -1,6 +1,6 @@
 import { handleFileClick } from './modal.js';
 
-let selectedFiles = [];
+window.selectedFiles = [];
   let isProgrammaticUpdate = false;
   // 存储对象URL用于后续释放
   let objectUrlMap = new WeakMap();
@@ -11,7 +11,8 @@ let selectedFiles = [];
     console.log('DOMContentLoaded事件触发，开始初始化文件上传元素');
     filePreviews = document.getElementById('filePreviews');
     fileInput = document.getElementById('fileInput');
-    console.log('获取元素结果:', { filePreviews: !!filePreviews, fileInput: !!fileInput });
+    console.log('文件上传元素初始化结果:', { filePreviewsExists: !!filePreviews, fileInputExists: !!fileInput });
+    if (!fileInput) console.error('无法找到fileInput元素，请检查HTML中的ID是否为"fileInput"');
 
     if (fileInput) {
       fileInput.addEventListener('change', handleFileSelect);
@@ -50,6 +51,8 @@ const FILE_ICONS = {
 const MAX_PREVIEW_SIZE = MAX_FILE_SIZE; // 100MB
 
 function handleFileSelect(event) {
+  console.log('handleFileSelect函数被调用');
+  console.log('原始文件数量:', event.target.files.length);
   console.log('文件选择事件触发', event);
   if (isProgrammaticUpdate) return;
   
@@ -69,16 +72,16 @@ function handleFileSelect(event) {
   return true;
 });
   
-  console.log('验证通过的文件数量:', newFiles.length);
+  console.log('验证通过的文件数量:', newFiles.length, '文件类型:', newFiles.map(f => f.type));
   if (newFiles.length === 0) return;
 
   // 添加新文件到选中文件列表
-  selectedFiles = [...selectedFiles, ...newFiles];
-  console.log('更新后选中的文件总数:', selectedFiles.length);
+  window.selectedFiles = [...window.selectedFiles, ...newFiles];
+  console.log('更新后选中的文件总数:', window.selectedFiles.length);
 
   // 创建DataTransfer对象
   const dataTransfer = new DataTransfer();
-  selectedFiles.forEach(file => dataTransfer.items.add(file));
+  window.selectedFiles.forEach(file => dataTransfer.items.add(file));
 
   // 批量预览新文件（异步分块处理）
   console.log('开始批量预览文件');
@@ -283,7 +286,7 @@ function removeFilePreview(file, preview) {
   }
   
   // 从选中文件列表中移除
-  selectedFiles = selectedFiles.filter(f => 
+  window.selectedFiles = window.selectedFiles.filter(f => 
     !(f.name === file.name && 
       f.size === file.size && 
       f.lastModified === file.lastModified)
@@ -298,7 +301,7 @@ function removeFilePreview(file, preview) {
 
 function updateFileInput() {
   const dataTransfer = new DataTransfer();
-  selectedFiles.forEach(f => dataTransfer.items.add(f));
+  window.selectedFiles.forEach(f => dataTransfer.items.add(f));
   
   isProgrammaticUpdate = true;
   fileInput.files = dataTransfer.files;
@@ -318,7 +321,7 @@ function resetSelectedFiles() {
   filePreviews.innerHTML = '';
   
   // 重置文件列表
-  selectedFiles.length = 0;
+  window.selectedFiles.length = 0;
   updateFileInput();
 }
 
@@ -326,7 +329,6 @@ function resetSelectedFiles() {
 export { 
   filePreviews, 
   handleFileSelect, 
-  selectedFiles, 
   resetSelectedFiles,
   addFiles // 新增这个导出
 };
@@ -346,7 +348,7 @@ function addFiles(files) {
   });
 
   if (validFiles.length > 0) {
-    selectedFiles = [...selectedFiles, ...validFiles];
+    window.selectedFiles = [...window.selectedFiles, ...validFiles];
     batchPreviewFiles(validFiles);
     updateFileInput();
   }
