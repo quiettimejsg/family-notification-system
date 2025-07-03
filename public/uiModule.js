@@ -24,6 +24,9 @@ export function initUI() {
 
   // 显示当前日期
   displayCurrentDate();
+
+  // 监听语言变化事件更新日期
+  window.addEventListener('languagechange', displayCurrentDate);
 }
 
 // 绑定UI事件处理函数

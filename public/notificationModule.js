@@ -18,6 +18,11 @@ export function initNotifications() {
 
   // 初始加载通知
   loadNotifications();
+
+  // 监听语言变化事件
+  window.addEventListener('languagechange', () => {
+    loadNotifications();
+  });
 }
 
 // 绑定事件处理函数

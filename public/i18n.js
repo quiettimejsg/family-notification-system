@@ -244,6 +244,7 @@ function updateLanguage(lang) {
           el.textContent = translations[key][lang];
         }
       });
+  window.dispatchEvent(new Event('languagechange'));
     }
   });
 }

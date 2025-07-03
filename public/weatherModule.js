@@ -37,6 +37,11 @@ export function initWeather() {
 
   // 初始加载天气
   fetchWeather(currentCity);
+
+  // 监听语言变化事件
+  window.addEventListener('languagechange', () => {
+    fetchWeather(currentCity);
+  });
 }
 
 // 切换温度单位
