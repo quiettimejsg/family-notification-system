@@ -5,13 +5,7 @@ initApp();
 // 应用初始化由appInitializer.js处理
 
   // 搜索过滤
-// 城市搜索功能已迁移至uiModule.js
-
-  // 切换下拉面板功能已迁移至uiModule.js
   // 点击外部关闭下拉面板功能已迁移至uiModule.js
-
-
-// 标题点击计数逻辑已迁移至uiModule.js
 
 // 模态框关闭逻辑已迁移至modal.js
 

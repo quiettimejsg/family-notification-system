@@ -137,8 +137,8 @@ function createImageThumbnail(file, preview, objectUrl) {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     
-    // 设置缩略图尺寸 (最大150px)
-    const maxSize = 150;
+    // 设置缩略图尺寸 (最大500px)
+    const maxSize = 500;
     let width = img.width;
     let height = img.height;
     
