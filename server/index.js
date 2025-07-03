@@ -33,16 +33,29 @@ const storage = multer.diskStorage({
 });
 
 // 修改文件类型过滤
-const fileFilter = (req, file, cb) => {
-  // 允许所有文件类型上传
-  cb(null, true);
-  
+const ALLOWED_MIME_TYPES = [
+  'image/jpeg', 'image/png', 'image/gif',
+  'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  'text/plain', 'video/mp4', 'audio/mpeg', 'audio/flac', 'audio/wav', 'audio/x-wav', 'audio/mp3'
+];
 
+const fileFilter = (req, file, cb) => {
+  if (ALLOWED_MIME_TYPES.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error('不支持的文件类型: ' + file.mimetype), false);
+  }
 };
 
 const upload = multer({ 
   storage,
-  fileFilter
+  fileFilter,
+  limits: {
+    fileSize: 100 * 1024 * 1024, // 限制单个文件大小为100MB
+    files: 20 // 限制最多20个文件
+  }
 });
 
 // 中间件
@@ -68,6 +81,15 @@ app.use((req, res, next) => {
 
 // 导入路由
 require('./routes')(app, upload);
+
+// 全局错误处理中间件
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(err.status || 500).json({
+    error: err.message || '服务器内部错误',
+    status: err.status || 500
+  });
+});
 
 // 添加进程退出和错误处理日志
 process.on('exit', (code) => {

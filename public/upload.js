@@ -7,7 +7,17 @@ import { handleFileClick } from './modal.js';
 let selectedFiles = [];
 let isProgrammaticUpdate = false;
 // 存储对象URL用于后续释放
-const objectUrlMap = new WeakMap();
+let objectUrlMap = new WeakMap();
+// 允许的文件类型和大小限制（与后端保持一致）
+const ALLOWED_MIME_TYPES = [
+  'image/jpeg', 'image/png', 'image/gif',
+  'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  'text/plain', 'video/mp4', 'audio/mpeg', 'audio/mp3', 'audio/wav',"audio/flac"
+];
+const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
+
 // 文件类型图标映射
 const FILE_ICONS = {
   pdf: 'picture_as_pdf',
@@ -21,20 +31,27 @@ const FILE_ICONS = {
   default: 'insert_drive_file'
 };
 
-// 最大预览尺寸限制 (移动端优化)
-const MAX_PREVIEW_SIZE = 1024 * 1024 * 1024; // 1024MB
+// 最大预览尺寸限制 (与上传限制一致)
+const MAX_PREVIEW_SIZE = MAX_FILE_SIZE; // 100MB
 
 function handleFileSelect(event) {
   if (isProgrammaticUpdate) return;
   
   const newFiles = Array.from(event.target.files).filter(file => {
-    // 跳过超大文件预览
-    if (file.size > MAX_PREVIEW_SIZE) {
-      console.warn(`文件 ${file.name} 超过预览大小限制，将不生成预览`);
-      return false;
-    }
-    return true;
-  });
+  // 验证文件类型
+  if (!ALLOWED_MIME_TYPES.includes(file.type)) {
+    console.warn(`文件 ${file.name} 类型不支持: ${file.type}`);
+    alert(`不支持的文件类型: ${file.name}`);
+    return false;
+  }
+  // 验证文件大小
+  if (file.size > MAX_FILE_SIZE) {
+    console.warn(`文件 ${file.name} 超过大小限制: ${file.size} > ${MAX_FILE_SIZE}`);
+    alert(`文件 ${file.name} 过大，请上传小于100MB的文件`);
+    return false;
+  }
+  return true;
+});
   
   if (newFiles.length === 0) return;
 
@@ -277,7 +294,7 @@ function resetSelectedFiles() {
   filePreviews.innerHTML = '';
   
   // 重置文件列表
-  selectedFiles = [];
+  selectedFiles.length = 0;
   updateFileInput();
 }
 
@@ -292,7 +309,23 @@ export {
 
 // 同时添加这个函数（用于外部添加文件）
 function addFiles(files) {
-  const validFiles = files.filter(file => file.size <= MAX_PREVIEW_SIZE);
+  const validFiles = files.filter(file => {
+  if (!ALLOWED_MIME_TYPES.includes(file.type)) {
+    console.warn(`文件 ${file.name} 类型不支持: ${file.type}`);
+    return false;
+  }
+  if (file.size > MAX_FILE_SIZE) {
+    console.warn(`文件 ${file.name} 超过大小限制`);
+    return false;
+  }
+  return true;
+});
+
+// 检查文件总数限制
+if (selectedFiles.length + validFiles.length > 20) {
+  alert('最多只能上传20个文件');
+  return [];
+}
   if (validFiles.length === 0) return;
 
   selectedFiles = [...selectedFiles, ...validFiles];

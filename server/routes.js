@@ -4,89 +4,64 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 console.log('天气模块依赖加载状态: axios=%s, cheerio=%s', !!axios, !!cheerio);
 
-const multer = require('multer');
-const path = require('path');
-
-// 配置multer处理中文文件名
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/');
-  },
-  filename: function (req, file, cb) {
-    // 使用原始文件名，避免编码转换导致的乱码
-    cb(null, Date.now() + '-' + file.originalname);
-  }
-});
-// 允许上传多个文件，最多20个
-const upload = multer({ storage: storage }).array('files', 20);
-
-module.exports = (app) => {
+module.exports = (app, upload) => {
   
   // 创建通知
 // 修改文件上传路径处理
-app.post('/api/notifications', upload, (req, res) => {
-  const { title, content, priority } = req.body;
-  const files = req.files || [];
-  
-  db.run(
-    'INSERT INTO notifications (title, content, priority) VALUES (?, ?, ?)',
-    [title, content, priority],
-    function(err) {
-      if (err) {
-        console.error('插入通知错误:', err);
-        return res.status(500).json({ error: '创建通知失败' });
-      }
-      
-      const notificationId = this.lastID;
-      
-      // 如果有文件，插入附件记录
-      if (files.length > 0) {
-        const stmt = db.prepare(
-          'INSERT INTO attachments (notification_id, type, path, original_name) VALUES (?, ?, ?, ?)'
-        );
-        
-        // 处理所有文件
-        const promises = files.map(file => {
-          return new Promise((resolve, reject) => {
-            let fileType = 'unknown';
-            if (file.mimetype.startsWith('image/')) fileType = 'image';
-            else if (file.mimetype.startsWith('video/')) fileType = 'video';
-            else if (file.mimetype.startsWith('audio/')) fileType = 'audio';
-            else if (file.mimetype === 'application/pdf') fileType = 'document';
-            
-            stmt.run(notificationId, fileType, file.filename, file.originalname, (err) => {
-              if (err) {
-                console.error('插入附件错误:', err);
-                reject(err);
-              } else {
-                resolve();
-              }
-            });
-          });
-        });
-        
-        // 等待所有文件处理完成
-        Promise.all(promises)
-          .then(() => stmt.finalize())
-          .then(() => {
-            res.status(201).json({
-              id: notificationId,
-              message: '通知创建成功',
-              files: files.map(f => f.filename)
-            });
-          })
-          .catch(err => {
-            stmt.finalize();
-            res.status(500).json({ error: '保存附件失败' });
-          });
-      } else {
-        res.status(201).json({
-          id: notificationId,
-          message: '通知创建成功'
-        });
-      }
+app.post('/api/notifications', (req, res, next) => {
+  upload(req, res, (err) => {
+    if (err) {
+      return res.status(400).json({ error: err.message });
     }
-  );
+    next();
+  });
+}, async (req, res) => {
+  try {
+    const { title = '', content = '', priority = 'low' } = req.body;
+    const files = req.files || [];
+    
+    // 插入通知
+    const notificationId = await new Promise((resolve, reject) => {
+      db.run(
+        'INSERT INTO notifications (title, content, priority) VALUES (?, ?, ?)',
+        [title, content, priority],
+        function(err) {
+          if (err) reject(err);
+          else resolve(this.lastID);
+        }
+      );
+    });
+    
+    // 处理附件
+    if (files.length > 0) {
+      const stmt = db.prepare(
+        'INSERT INTO attachments (notification_id, type, path, original_name, size) VALUES (?, ?, ?, ?, ?)'
+      );
+      
+      const promises = files.map(file => {
+        return new Promise((resolve, reject) => {
+          let fileType = 'unknown';
+          if (file.mimetype.startsWith('image/')) fileType = 'image';
+          else if (file.mimetype.startsWith('video/')) fileType = 'video';
+          else if (file.mimetype.startsWith('audio/')) fileType = 'audio';
+          else if (file.mimetype === 'application/pdf') fileType = 'document';
+          
+          stmt.run(notificationId, fileType, file.filename, file.originalname, file.size || 0, (err) => {
+            if (err) reject(err);
+            else resolve();
+          });
+        });
+      });
+      
+      await Promise.all(promises);
+      stmt.finalize();
+    }
+    
+    res.status(201).json({ id: notificationId, message: '通知创建成功' });
+  } catch (err) {
+    console.error('创建通知错误:', err);
+    res.status(500).json({ error: '创建通知失败: ' + err.message });
+  }
 });
   
   // 获取所有通知

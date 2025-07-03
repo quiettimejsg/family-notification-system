@@ -54,10 +54,11 @@ async function handleFormSubmit(e) {
   const content = document.getElementById('record-content')?.value;
   const priority = document.querySelector('.priority-btn.active')?.dataset.priority || 'low';
 
-  if (!title || !content) {
-    showStatus(translations['form-error'][langState.current], 'error');
-    return;
-  }
+  // 允许空标题和内容
+  // if (!title || !content) {
+  //   showStatus(translations['form-error'][langState.current], 'error');
+  //   return;
+  // }
 
   // 创建FormData对象
   const formData = new FormData();
@@ -71,27 +72,65 @@ async function handleFormSubmit(e) {
   });
 
   try {
-    const response = await fetch('/api/notifications', {
-      method: 'POST',
-      body: formData,
-      credentials: 'include'
-    });
+      // 创建进度条元素
+      const progressContainer = document.createElement('div');
+      progressContainer.className = 'upload-progress-container';
+      progressContainer.innerHTML = `
+        <div class="progress-bar"></div>
+        <div class="progress-text">0%</div>
+      `;
+      document.body.appendChild(progressContainer);
+      const progressBar = progressContainer.querySelector('.progress-bar');
+      const progressText = progressContainer.querySelector('.progress-text');
 
-    if (response.ok) {
-      showStatus(translations['success'][langState.current], 'success');
-      addRecordModal.style.display = 'none';
-      addRecordForm.reset();
-      resetSelectedFiles();
-      priorityBtns.forEach(b => b.classList.remove('active'));
-      document.querySelector('.low-priority-btn')?.classList.add('active');
-      loadNotifications(); // 刷新通知列表
-    } else {
-      throw new Error(translations['error-adding-notification'][langState.current]);
+      // 使用XMLHttpRequest实现进度监听
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', '/api/notifications');
+      xhr.withCredentials = true;
+
+      // 上传进度监听
+      xhr.upload.addEventListener('progress', (e) => {
+        if (e.lengthComputable) {
+          const percent = Math.round((e.loaded / e.total) * 100);
+          progressBar.style.width = `${percent}%`;
+          progressText.textContent = `${percent}%`;
+        }
+      });
+
+      // 完成处理
+      xhr.addEventListener('load', () => {
+        document.body.removeChild(progressContainer);
+        if (xhr.status >= 200 && xhr.status < 300) {
+          showStatus(translations['success'][langState.current], 'success');
+          addRecordModal.style.display = 'none';
+          addRecordForm.reset();
+          resetSelectedFiles();
+          priorityBtns.forEach(b => b.classList.remove('active'));
+          document.querySelector('.low-priority-btn')?.classList.add('active');
+          loadNotifications(); // 刷新通知列表
+        } else {
+          let errorMessage = translations['error-adding-notification'][langState.current];
+          try {
+            const errorData = JSON.parse(xhr.responseText);
+            errorMessage = errorData.error || errorMessage;
+          } catch (e) {
+            errorMessage = xhr.responseText.substring(0, 100);
+          }
+          throw new Error(errorMessage);
+        }
+      });
+
+      // 错误处理
+      xhr.addEventListener('error', () => {
+        document.body.removeChild(progressContainer);
+        throw new Error(translations['network-error'][langState.current]);
+      });
+
+      xhr.send(formData);
+    } catch (error) {
+      showStatus(error.message || translations['error'][langState.current], 'error');
+      console.error('Error adding notification:', error);
     }
-  } catch (error) {
-    showStatus(translations['error'][langState.current], 'error');
-    console.error('Error adding notification:', error);
-  }
 }
 
 // 加载通知列表
