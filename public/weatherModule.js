@@ -16,6 +16,19 @@ const weatherIcons = {
   'default': 'help_outline'
 };
 
+// 天气状况到翻译键的映射
+const weatherConditionMap = {
+  '晴': 'sunny',
+  '多云': 'cloudy',
+  '阴': 'overcast',
+  '雨': 'rainy',
+  '雪': 'snowy',
+  '雷': 'thunderstorm',
+  '雾': 'foggy',
+  '霾': 'foggy',
+  'default': 'unknown'
+};
+
 // 初始化天气模块
 export function initWeather() {
   // 从localStorage加载温度单位偏好
@@ -95,6 +108,7 @@ function displayWeather(data) {
 
   // 获取天气图标
   const weatherCondition = todayWeather.weather.toLowerCase();
+  const conditionKey = weatherConditionMap[weatherCondition] || 'unknown';
   const icon = weatherIcons[weatherCondition] || weatherIcons['default'];
 
   // 构建天气HTML
@@ -104,7 +118,7 @@ function displayWeather(data) {
       <span class="material-icons weather-icon">${icon}</span>
       <span class="temp-value">${temp}</span>
     </div>
-    <div class="condition" style="flex: none;">${translations[`weather-${weatherCondition}`]?.[langState.current] || todayWeather.weather}</div>
+    <div class="condition" style="flex: none;">${translations[`weather-${conditionKey}`]?.[langState.current] || todayWeather.weather}</div>
   </div>
   `;
 

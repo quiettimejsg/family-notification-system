@@ -56,18 +56,6 @@ const translations = {
 "zh": "候氣載入敗",
 "en": "Weder lǣde wæs forworpen"
 },
-"geolocation-error": {
-"zh": "獲輿圖敗，請允定位權或用常邑",
-"en": "Nǣte tō habban londstede; lǣt stede beþafunges oþþe brūc foresette burh"
-},
-"current-location": {
-"zh": "現方所",
-"en": "Nūstede"
-},
-"search-city": {
-"zh": "索邑...",
-"en": "Sēċ burh…"
-},
 "weather-sunny": {
 "zh": "暘",
 "en": "Sunnig"

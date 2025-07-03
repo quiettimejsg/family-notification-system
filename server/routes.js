@@ -17,7 +17,7 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + '-' + file.originalname);
   }
 });
-// 允许上传多个文件，最多5个
+// 允许上传多个文件，最多20个
 const upload = multer({ storage: storage }).array('files', 20);
 
 module.exports = (app) => {
@@ -27,10 +27,6 @@ module.exports = (app) => {
 app.post('/api/notifications', upload, (req, res) => {
   const { title, content, priority } = req.body;
   const files = req.files || [];
-  
-  if (!title || !content) {
-    return res.status(400).json({ error: '标题和内容不能为空' });
-  }
   
   db.run(
     'INSERT INTO notifications (title, content, priority) VALUES (?, ?, ?)',
