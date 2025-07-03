@@ -1,8 +1,8 @@
 // 多语言字典（添加所有必需的键）
 const translations = {
 "app-title": {
-"zh": "通知系統",
-"en": "Notifsys"
+"zh": "家府通傳之制",
+"en": "Þæs Hīredes Bodcræft"
 },
 "priority-high": {
 "zh": "急",
