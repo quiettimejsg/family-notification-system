@@ -1,7 +1,6 @@
 import { translations } from './i18n.js';
 import { langState } from './i18n.js';
 
-let currentCity;
 let useCelsius = true;
 
 // 天气状况图标映射（中文）
@@ -23,11 +22,12 @@ export function initWeather() {
   const savedUnit = localStorage.getItem('tempUnit');
   if (savedUnit) {
     useCelsius = savedUnit === 'celsius';
+  } else {
+    // 根据语言自动设置默认单位
+    useCelsius = langState.current === 'zh'; // 中文默认摄氏度，英文默认华氏度
   }
 
   // 获取默认城市
-  currentCity = translations['default-city']?.[langState.current] || '苏州';
-
   // 绑定温度单位切换事件
   const tempUnitToggle = document.getElementById('tempUnitToggle');
   if (tempUnitToggle) {
@@ -36,11 +36,18 @@ export function initWeather() {
   }
 
   // 初始加载天气
-  fetchWeather(currentCity);
+  fetchWeather();
 
   // 监听语言变化事件
   window.addEventListener('languagechange', () => {
-    fetchWeather(currentCity);
+    // 切换语言时，根据新语言设置单位，并保存到localStorage
+    useCelsius = langState.current === 'zh';
+    localStorage.setItem('tempUnit', useCelsius ? 'celsius' : 'fahrenheit');
+    const tempUnitToggle = document.getElementById('tempUnitToggle');
+    if (tempUnitToggle) {
+      tempUnitToggle.textContent = useCelsius ? '°C' : '°F';
+    }
+    fetchWeather();
   });
 }
 
@@ -49,20 +56,18 @@ function toggleTemperatureUnit() {
   useCelsius = !useCelsius;
   localStorage.setItem('tempUnit', useCelsius ? 'celsius' : 'fahrenheit');
   document.getElementById('tempUnitToggle').textContent = useCelsius ? '°C' : '°F';
-  fetchWeather(currentCity); // 重新获取并显示天气
+  fetchWeather(); // 重新获取并显示天气
 }
 
 // 获取并显示天气
-export async function fetchWeather(city) {
-  if (!city) return;
-
+export async function fetchWeather() {
   const weatherContainer = document.getElementById('weather-info');
   if (!weatherContainer) return;
 
   weatherContainer.innerHTML = `<div class="loading-text">${translations['weather-loading']?.[langState.current] || 'Loading weather...'}</div>`;
 
   try {
-    const response = await fetch(`/api/weather?city=${encodeURIComponent(city)}`);
+    const response = await fetch(`/api/weather`);
     if (!response.ok) throw new Error(translations['weather-load-error']?.[langState.current] || 'Failed to load weather');
 
     const responseData = await response.json();

@@ -190,10 +190,6 @@ const translations = {
 "zh": "於瀏覽器觀",
 "en": "Sīeh in brūscāre"
 },
-"default-city": {
-"zh": "苏州", // 依令不改
-"en": "苏州"
-},
 "network-error": {
 "zh": "絡訊異常",
 "en": "Netwyrċ andswaru wæs nǣt rihte"
@@ -235,7 +231,7 @@ function updateLanguage(lang) {
           el.textContent = translations[key][lang];
         }
       });
-  window.dispatchEvent(new Event('languagechange'));
+    window.dispatchEvent(new Event('languagechange'));
     }
   });
 }

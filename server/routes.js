@@ -170,8 +170,8 @@ app.post('/api/notifications', upload, (req, res) => {
     try {
       console.log('收到天气请求:', req.method, req.originalUrl);
       console.log('天气请求参数:', req.query);
-      const { city, days } = req.query;
-      const result = await weatherService.getWeatherData(city || '苏州', days);
+      const { days } = req.query;
+      const result = await weatherService.getWeatherData(days);
       console.log('天气数据获取成功:', result);
       res.json({
         success: true,
@@ -189,39 +189,4 @@ app.post('/api/notifications', upload, (req, res) => {
     }
   });
 
-  // 获取支持的城市列表
-  app.get('/api/weather/cities', (req, res) => {
-    res.json({
-      cities: Object.entries(weatherService.cityCodes).map(([name, code]) => ({ name, code }))
-    });
-  });
-
-  // 地理编码API：将经纬度转换为城市名称（本地计算版）
-  app.get('/api/geocode', (req, res) => {
-    const { lat, lon } = req.query;
-    if (!lat || !lon) {
-      return res.status(400).json({ error: '缺少经纬度参数' });
-    }
-    
-    try {
-      const latitude = parseFloat(lat);
-      const longitude = parseFloat(lon);
-      
-      if (isNaN(latitude) || isNaN(longitude)) {
-        throw new Error('经纬度参数格式不正确');
-      }
-      
-      // 使用本地算法查找最近的城市
-      const city = findNearestCity(latitude, longitude);
-      console.log(`[地理编码] 经纬度(${latitude}, ${longitude}) -> 最近城市: ${city}`);
-      
-      res.json({ city: city });
-    } catch (error) {
-      console.error('地理编码错误:', error);
-      res.status(500).json({
-        error: `无法获取城市信息: ${error.message}`,
-        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
-      });
-    }
-  });
 };

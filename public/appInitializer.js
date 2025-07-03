@@ -20,7 +20,6 @@ export function initApp() {
     // 初始化语言
     updateLanguage(langState.current);
     addRecordModal = document.getElementById('add-record-modal');
-    currentCity = translations['default-city'][langState.current];
 
     // 初始化语言切换按钮
     initLanguageSwitcher();
