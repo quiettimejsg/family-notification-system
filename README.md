@@ -1,3 +1,5 @@
+[中文](#zh) * [English](#en)
+<a id="zh"></a>
 # 家庭通知系统（Family Notification System）
 
 ## 项目简介
@@ -67,11 +69,11 @@
 3. 提交Pull Request并关联对应Issue
 
 ## 许可证
-MIT License
-Copyright (c) 2024 项目作者
+AGPL-3.0 License
+Copyright (c) 2025 quiettimejsg
 
 ---
-
+<a id="en"></a>
 # Family Notification System
 
 ## Project Introduction
@@ -141,5 +143,5 @@ Click the top refresh icon (↻) to load the latest notification list
 3. Submit a Pull Request and link to the corresponding Issue
 
 ## License
-MIT License
-Copyright (c) 2024 Project Author
+AGPL-3.0 License
+Copyright (c) 2025 quiettimejsg
