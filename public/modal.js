@@ -153,7 +153,7 @@ fullscreenModal.querySelector('#download-file').addEventListener('click', () => 
   const file = currentFiles[currentFileIndex];
   const link = document.createElement('a');
   link.href = `/uploads/${file.path}`;
-  link.download = file.originalName;
+  link.download = file.original_name;
   link.click();
 });
 
