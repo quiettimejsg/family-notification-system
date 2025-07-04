@@ -88,12 +88,12 @@ function bindEvents() {
   });
 
   // 添加所有选中的文件
-  console.log('提交时的文件列表:', window.selectedFiles);
-    console.log('提交时的文件数量:', window.selectedFiles.length);
-    window.selectedFiles.forEach((file, index) => {
+  console.log('提交时的文件列表:', selectedFiles);
+    console.log('提交时的文件数量:', selectedFiles.length);
+    selectedFiles.forEach((file, index) => {
       console.log(`提交的文件 ${index + 1}:`, file.name, file.type, file.size);
     });
-  window.selectedFiles.forEach((file, index) => {
+  selectedFiles.forEach((file, index) => {
     console.log(`添加文件 ${index + 1}:`, file.name, file.size);
     formData.append('files', file);
   });
