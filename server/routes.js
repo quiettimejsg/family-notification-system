@@ -136,6 +136,22 @@ app.post('/api/notifications', (req, res, next) => {
     res.json({ lang: res.getLocale() });
   });
 
+  // 获取维护日志
+  app.get('/api/maintenance/logs', (req, res) => {
+    const { limit = 10 } = req.query;
+    db.all(
+      'SELECT * FROM maintenance_log ORDER BY check_time DESC LIMIT ?',
+      [parseInt(limit)],
+      (err, logs) => {
+        if (err) {
+          console.error('获取维护日志错误:', err);
+          return res.status(500).json({ error: '获取维护日志失败' });
+        }
+        res.json(logs);
+      }
+    );
+  });
+
   // 导入天气服务
   const weatherService = require('./weatherService');
   const { findNearestCity } = weatherService;

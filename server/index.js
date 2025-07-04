@@ -8,6 +8,7 @@ const path = require('path');
 const app = express();
 const port = process.env.PORT || 3000;
 const fs = require('fs');
+const maintenance = require('./maintenance');
 // 设置多语言
 i18n.configure({
   locales: ['zh', 'en'],
@@ -92,4 +93,6 @@ app.listen(3000, '0.0.0.0', () => {
   console.log('服务器启动成功，正在监听端口 3000');
   console.log('服务器地址: http://0.0.0.0:3000');
   console.log('数据库连接状态: 已连接');
+  // 初始化维护任务
+  maintenance.initMaintenance();
 });
