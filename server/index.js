@@ -33,7 +33,8 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ 
-  storage
+  storage,
+  limits: { fileSize: 10 * 1024 * 1024 } // 允许最大10MB的文件
 });
 
 // 中间件
@@ -43,7 +44,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(cors());
+app.use(cors({ credentials: true }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../public')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -91,14 +92,4 @@ app.listen(3000, '0.0.0.0', () => {
   console.log('服务器启动成功，正在监听端口 3000');
   console.log('服务器地址: http://0.0.0.0:3000');
   console.log('数据库连接状态: 已连接');
-  console.log('准备初始化保持活跃定时器...');
-  try {
-    const intervalId = setInterval(() => {
-      console.log('[保持活跃] 定时器执行中... intervalId:', intervalId);
-    }, 1000);
-    console.log('定时器初始化成功，ID:', intervalId);
-    console.log('定时器类型:', typeof intervalId);
-  } catch (error) {
-    console.error('定时器初始化失败:', error);
-  }
 });

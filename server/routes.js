@@ -9,7 +9,7 @@ module.exports = (app, upload) => {
   // 创建通知
 // 修改文件上传路径处理
 app.post('/api/notifications', (req, res, next) => {
-  upload.array('files')(req, res, (err) => {
+  upload.array('files[]')(req, res, (err) => {
     if (err) {
       return res.status(400).json({ error: err.message });
     }

@@ -1,5 +1,5 @@
 import { translations } from './i18n.js';
-import { resetSelectedFiles } from './upload.js';
+import { resetSelectedFiles, selectedFiles } from './upload.js';
 import { langState } from './i18n.js';
 
 
@@ -30,6 +30,9 @@ export function initNotifications() {
 function bindEvents() {
   if (addRecordForm) {
     addRecordForm.addEventListener('submit', handleFormSubmit);
+    console.log('表单提交事件监听器已成功绑定');
+  } else {
+    console.error('addRecordForm元素未找到，无法绑定提交事件监听器');
   }
 
   // 优先级按钮事件
@@ -49,7 +52,17 @@ function bindEvents() {
 
   // 表单提交处理
   async function handleFormSubmit(e) {
+    console.log('handleFormSubmit called, event received:', e);
     e.preventDefault();
+    // 显式移除必填验证
+    const titleInput = document.getElementById('record-title');
+    const contentInput = document.getElementById('record-content');
+    if (titleInput) titleInput.required = false;
+    if (contentInput) contentInput.required = false;
+    console.log('已移除标题和内容输入框的required属性');
+    console.log('表单提交事件触发，handleFormSubmit开始执行');
+    console.log('window.selectedFiles数量:', window.selectedFiles.length);
+    console.log('window.selectedFiles内容:', window.selectedFiles);
     const title = document.getElementById('record-title')?.value;
   const content = document.getElementById('record-content')?.value;
   const priority = document.querySelector('.priority-btn.active')?.dataset.priority || 'low';
@@ -65,6 +78,14 @@ function bindEvents() {
   formData.append('title', title);
   formData.append('content', content);
   formData.append('priority', priority);
+  console.log('FormData内容:');
+  formData.forEach((value, key) => {
+    if (key === 'files') {
+      console.log(`${key}:`, value.name, value.size);
+    } else {
+      console.log(`${key}:`, value);
+    }
+  });
 
   // 添加所有选中的文件
   console.log('提交时的文件列表:', window.selectedFiles);

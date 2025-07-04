@@ -1,40 +1,48 @@
-window.selectedFiles = [];
+let selectedFiles = [];
   let isProgrammaticUpdate = false;
 
     let filePreviews, fileInput;
 
-  // 等待DOM完全加载后再初始化
-  document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOMContentLoaded事件触发，开始初始化文件上传元素');
-    filePreviews = document.getElementById('filePreviews');
-    fileInput = document.getElementById('fileInput');
-    console.log('文件上传元素初始化结果:', { filePreviewsExists: !!filePreviews, fileInputExists: !!fileInput });
-    if (!fileInput) console.error('无法找到fileInput元素，请检查HTML中的ID是否为"fileInput"');
+// 初始化文件上传功能
+export function initFileUpload() {
+  console.log('开始初始化文件上传元素');
+  filePreviews = document.getElementById('filePreviews');
+  fileInput = document.getElementById('fileInput');
+  console.log('文件上传元素初始化结果:', { filePreviewsExists: !!filePreviews, fileInputExists: !!fileInput });
+  if (!fileInput) console.error('无法找到fileInput元素，请检查HTML中的ID是否为"fileInput"');
 
-    if (fileInput) {
-      fileInput.addEventListener('change', handleFileSelect);
-    } else {
-      console.error('fileInput元素未找到');
-    }
+  if (fileInput) {
+    fileInput.addEventListener('change', handleFileSelect);
+  } else {
+    console.error('fileInput元素未找到');
+  }
 
-    if (!filePreviews) {
-      console.error('filePreviews容器未找到');
-    }
-  });
+  if (!filePreviews) {
+    console.error('filePreviews容器未找到');
+  }
+}
 
 function handleFileSelect(event) {
-  console.log('handleFileSelect函数被调用');
+  console.log('handleFileSelect函数被调用，isProgrammaticUpdate:', isProgrammaticUpdate);
   console.log('原始文件数量:', event.target.files.length);
   console.log('文件选择事件触发', event);
   if (isProgrammaticUpdate) return;
   
-  const newFiles = Array.from(event.target.files);
+  // 使用for循环代替Array.from确保正确获取文件
+  const newFiles = [];
+  for (let i = 0; i < event.target.files.length; i++) {
+    newFiles.push(event.target.files[i]);
+  }
   console.log('选择的文件数量:', newFiles.length);
+  newFiles.forEach((file, index) => {
+    console.log(`文件 ${index + 1}:`, file.name, file.size, file.type);
+  });
   if (newFiles.length === 0) return;
 
   // 添加新文件到选中文件列表
   window.selectedFiles = [...window.selectedFiles, ...newFiles];
   console.log('更新后选中的文件总数:', window.selectedFiles.length);
+  console.log('更新后选中的文件内容:', window.selectedFiles);
 
   // 创建DataTransfer对象
   const dataTransfer = new DataTransfer();
@@ -43,6 +51,7 @@ function handleFileSelect(event) {
   // 更新文件输入框
   isProgrammaticUpdate = true;
   fileInput.files = dataTransfer.files;
+  isProgrammaticUpdate = false;
   renderFileList();
   isProgrammaticUpdate = false;
 }
@@ -95,6 +104,7 @@ function updateFileInput() {
 }
 
 function resetSelectedFiles() {
+  console.log('resetSelectedFiles被调用');
   // 清空预览区域
   const filePreviews = document.getElementById('filePreviews');
   if (filePreviews) filePreviews.innerHTML = '';
@@ -103,14 +113,6 @@ function resetSelectedFiles() {
   window.selectedFiles = [];
   updateFileInput();
 }
-
-// 在文件底部修改导出部分
-export { 
-  filePreviews, 
-  handleFileSelect, 
-  resetSelectedFiles,
-  addFiles // 新增这个导出
-};
 
 // 同时添加这个函数（用于外部添加文件）
 function addFiles(files) {
@@ -124,3 +126,12 @@ function addFiles(files) {
   }
   return validFiles;
 }
+
+// 在文件底部修改导出部分
+export { 
+  filePreviews, 
+  handleFileSelect, 
+  resetSelectedFiles,
+  addFiles, 
+  selectedFiles // 导出selectedFiles数组
+};

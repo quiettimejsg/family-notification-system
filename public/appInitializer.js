@@ -4,7 +4,6 @@ console.log('[客户端] 加载时间:', new Date().toISOString());
 // 导入依赖模块
 import { translations, updateLanguage } from './i18n.js';
 import { handleFileClick } from './modal.js';
-import {  resetSelectedFiles } from './upload.js';
 import { langState } from './i18n.js';
 
 // 全局暴露必要方法
@@ -53,10 +52,13 @@ function initLanguageSwitcher() {
 function initCoreFeatures() {
   // 延迟加载其他功能模块以提高初始加载速度
   Promise.all([
-    import('./notificationModule.js'),
-    import('./weatherModule.js'),
-    import('./uiModule.js')
-  ]).then(([notificationModule, weatherModule, uiModule]) => {
+      import('./notificationModule.js'),
+      import('./weatherModule.js'),
+      import('./uiModule.js'),
+      import('./upload.js')
+    ]).then(([notificationModule, weatherModule, uiModule, uploadModule]) => {
+      // 初始化文件上传模块
+      uploadModule.initFileUpload();
     // 初始化通知模块
     notificationModule.initNotifications();
     
