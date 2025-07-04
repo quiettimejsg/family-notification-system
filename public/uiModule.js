@@ -12,9 +12,6 @@ export function initUI() {
   // 绑定UI事件
   bindUIEvents();
 
-  // 初始化城市列表
-
-
   // 显示当前日期
   displayCurrentDate();
 

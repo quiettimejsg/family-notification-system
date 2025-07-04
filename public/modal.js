@@ -169,21 +169,6 @@ fullscreenModal.classList.add('active');
   showFileInModal(index);
 }
 
-// 获取文件类型对应的图标
-function getFileIcon(fileType) {
-  const icons = {
-    'image': 'image',
-    'video': 'movie',
-    'audio': 'audiotrack',
-    'document-pdf': 'picture_as_pdf',
-    'document-word': 'description',
-    'document-excel': 'grid_on',
-    'document-ppt': 'slideshow',
-    'text': 'text_fields',
-    'default': 'insert_drive_file'
-  };
-  return `<i class="material-icons">${icons[fileType] || icons.default}</i>`;
-}
 
 // 导出模态框相关方法
 export {
