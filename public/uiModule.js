@@ -1,6 +1,6 @@
 import { translations } from './i18n.js';
 import { langState } from './i18n.js';
-import { resetSelectedFiles } from './upload.js';
+import { resetSelectedFiles, renderFileList } from './upload.js';
 
 let addRecordModal;
 

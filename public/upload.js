@@ -40,29 +40,36 @@ function handleFileSelect(event) {
   if (newFiles.length === 0) return;
 
   // 添加新文件到选中文件列表
-  window.selectedFiles = [...window.selectedFiles, ...newFiles];
-  console.log('更新后选中的文件总数:', window.selectedFiles.length);
-  console.log('更新后选中的文件内容:', window.selectedFiles);
+  selectedFiles = [...selectedFiles, ...newFiles];
+  console.log('更新后选中的文件总数:', selectedFiles.length);
+  console.log('更新后选中的文件内容:', selectedFiles);
 
   // 创建DataTransfer对象
   const dataTransfer = new DataTransfer();
-  window.selectedFiles.forEach(file => dataTransfer.items.add(file));
+  selectedFiles.forEach(file => dataTransfer.items.add(file));
 
   // 更新文件输入框
   isProgrammaticUpdate = true;
-  fileInput.files = dataTransfer.files;
-  isProgrammaticUpdate = false;
+  try {
+    fileInput.files = dataTransfer.files;
+  } finally {
+    isProgrammaticUpdate = false;
+  }
   renderFileList();
-  isProgrammaticUpdate = false;
 }
 
 function renderFileList() {
   const container = document.getElementById('filePreviews');
-  if (!container) return;
+  console.log('filePreviews容器获取结果:', container);
+  if (!container) {
+    console.log('filePreviews容器不存在，无法渲染文件列表');
+    return;
+  }
+  console.log('开始渲染文件列表，文件数量:', selectedFiles.length);
   
   container.innerHTML = ''; // 清空现有内容
   
-  window.selectedFiles.forEach(file => {
+  selectedFiles.forEach(file => {
     const fileItem = document.createElement('div');
     fileItem.className = 'file-item';
     fileItem.textContent = file.name;
@@ -97,20 +104,24 @@ function uploadFiles() {
 
 function updateFileInput() {
   const dataTransfer = new DataTransfer();
-  window.selectedFiles.forEach(f => dataTransfer.items.add(f));
+  selectedFiles.forEach(f => dataTransfer.items.add(f));
   
   isProgrammaticUpdate = true;
-  fileInput.files = dataTransfer.files;
+  try {
+    fileInput.files = dataTransfer.files;
+  } finally {
+    isProgrammaticUpdate = false; // 确保标志始终被重置
+  }
 }
 
 function resetSelectedFiles() {
   console.log('resetSelectedFiles被调用');
   // 清空预览区域
-  const filePreviews = document.getElementById('filePreviews');
+  const filePreviews = document.querySelector('.file-preview-container');
   if (filePreviews) filePreviews.innerHTML = '';
   
   // 重置文件列表
-  window.selectedFiles = [];
+  selectedFiles = [];
   updateFileInput();
 }
 
@@ -118,9 +129,9 @@ function resetSelectedFiles() {
 function addFiles(files) {
   const validFiles = files;
   if (validFiles.length > 0) {
-    window.selectedFiles = [...window.selectedFiles, ...validFiles];
-    console.log('添加文件后全局文件列表:', window.selectedFiles);
-    console.log('添加文件后全局文件数量:', window.selectedFiles.length);
+    selectedFiles = [...selectedFiles, ...validFiles];
+    console.log('添加文件后文件列表:', selectedFiles);
+    console.log('添加文件后文件数量:', selectedFiles.length);
     renderFileList();
     updateFileInput();
   }
@@ -133,5 +144,6 @@ export {
   handleFileSelect, 
   resetSelectedFiles,
   addFiles, 
-  selectedFiles // 导出selectedFiles数组
+  selectedFiles, // 导出selectedFiles数组
+  renderFileList // 导出文件列表渲染函数
 };

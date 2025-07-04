@@ -157,6 +157,26 @@
                 display: none; /* 隐藏Chrome、Safari和Opera滚动条 */
             }
 
+            /* 文件预览容器样式 */
+            .file-preview-container {
+                margin: 15px 0;
+                padding: 10px;
+                border: 1px dashed #ccc;
+                border-radius: 5px;
+                min-height: 50px;
+            }
+
+            /* 文件项样式 */
+            .file-item {
+                padding: 8px 10px;
+                margin: 5px 0;
+                background-color: #f8f9fa;
+                border-radius: 4px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
              .date-weather-container {
                 flex-direction: row;
                 align-items: center;

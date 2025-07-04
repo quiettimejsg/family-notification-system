@@ -1,6 +1,6 @@
 import { translations } from './i18n.js';
 import { resetSelectedFiles, selectedFiles } from './upload.js';
-import { langState } from './i18n.js';
+  import { langState } from './i18n.js';
 
 
 let addRecordModal;
@@ -61,8 +61,8 @@ function bindEvents() {
     if (contentInput) contentInput.required = false;
     console.log('已移除标题和内容输入框的required属性');
     console.log('表单提交事件触发，handleFormSubmit开始执行');
-    console.log('window.selectedFiles数量:', window.selectedFiles.length);
-    console.log('window.selectedFiles内容:', window.selectedFiles);
+    console.log('selectedFiles数量:', selectedFiles.length);
+    console.log('selectedFiles内容:', selectedFiles);
     const title = document.getElementById('record-title')?.value;
   const content = document.getElementById('record-content')?.value;
   const priority = document.querySelector('.priority-btn.active')?.dataset.priority || 'low';
