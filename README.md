@@ -105,7 +105,7 @@ AGPL-3.0 License
    ```bash
    git clone https://github.com/quiettimejsg/family-notification-system.git
    ```
-   
+
 2. Þā þearflican þing settan (gang intō þone wyrtwalan)
    ```bash
    npm install
@@ -115,7 +115,7 @@ AGPL-3.0 License
    npm start
    ```
 4. Þæt foran-geweorc sēcan
-   Opena þīnne webb-sēcend and gang tō http://localhost:3000
+   Opena þīnne webb-sēcend and gang tō `http://localhost:3000`
 
 ## Brūces Lār
 ### Bodan Īecan
@@ -136,13 +136,13 @@ Cnyssa þæt nīwunge tācen (↻) beufan for þā nīwestan bodan tō sēonne.
  * Þæt gecorene weder biþ sōna īewed.
 
 ## Mearcunge Lār
- * Bōchordes Mearcung: Wende server/database.js tō brēmanne þā gemōtcræftas þæs SQLite.
- * Īecnunga Pæþ: Se pæþ is on server/uploads geseted (man mæg wendan þone uploadPath in server/routes.js).
- * Gereorda Gewritu: Īec nīwu gereordu þurh þæt translations þing in public/i18n.js.
+ * Bōchordes Mearcung: Wende `server/database.js` tō brēmanne þā gemōtcræftas þæs SQLite.
+ * Īecnunga Pæþ: Se pæþ is on `server/uploads` geseted (man mæg wendan þone `uploadPath` in `server/routes.js`).
+ * Gereorda Gewritu: Īec nīwu gereordu þurh þæt `translations` þing in `public/i18n.js`.
 
 ## Giefan Rǣdes Lār
  * Senda Issue ymb þīnne willan oþþe þæt unriht þe þū funde.
- * Forca þis geweorc and wyrce nīwne telgor (swelce feature/new-feature).
+ * Forca þis geweorc and wyrce nīwne telgor (swelce `feature/new-feature`).
  * Senda Pull Request and hine gebind wiþ þæt rihte Issue.
 
 ## Lēaf
