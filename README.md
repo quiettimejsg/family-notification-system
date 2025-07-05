@@ -28,7 +28,7 @@
 ### 步驟
 1. 克隆項目至本機
    ```bash
-   git clone https://github.com/your-username/family-notification-system.git
+   git clone https://github.com/quiettimejsg/family-notification-system.git
    ```
 2. 安依項（於根目行）
    ```bash
@@ -103,38 +103,48 @@ AGPL-3.0 License
 ### Stapas
 1. Þis geweorc tō þīnum lande āhladan
    ```bash
-   git clone [https://github.com/your-username/family-notification-system.git](https://github.com/your-username/family-notification-system.git)
-
- * Þā þearflican þing settan (gang intō þone wyrtwalan)
+   git clone https://github.com/quiettimejsg/family-notification-system.git
+   ```
+   
+2. Þā þearflican þing settan (gang intō þone wyrtwalan)
+   ```bash
    npm install
-
- * Þone þegn onstellan
+   ```
+3. Þone þegn onstellan
+   ```bash
    npm start
-
- * Þæt foran-geweorc sēcan
+   ```
+4. Þæt foran-geweorc sēcan
    Opena þīnne webb-sēcend and gang tō http://localhost:3000
-Brūces Lār
-Bodan Īecan
+
+## Brūces Lār
+### Bodan Īecan
  * Fyll þone hēafodstaf and þæt bod in.
  * Cēos þone hād þæs bodan (ungemetlic is se gewunelica).
  * Cnyssa "Ġewrit Īecan" for þīnum īecnunge (þēah man ne þurfe).
  * Cnyssa "Sendan" for þæt bod tō āsendenne.
-Gereorde Wendan
+
+### Gereorde Wendan
 Cnyssa þone "A/文" cnæpp beufan for þæt gereorde tō wendanne.
-Bodan Nīwian
+
+### Bodan Nīwian
 Cnyssa þæt nīwunge tācen (↻) beufan for þā nīwestan bodan tō sēonne.
-On Weder Lōcian
+
+### On Weder Lōcian
  * Cnyssa þæt wederes tācen oþþe þone naman þǣre stōwe beufan.
  * Sēc þā stōwe oþþe cēos fram þǣm getele.
  * Þæt gecorene weder biþ sōna īewed.
-Mearcunge Lār
+
+## Mearcunge Lār
  * Bōchordes Mearcung: Wende server/database.js tō brēmanne þā gemōtcræftas þæs SQLite.
  * Īecnunga Pæþ: Se pæþ is on server/uploads geseted (man mæg wendan þone uploadPath in server/routes.js).
  * Gereorda Gewritu: Īec nīwu gereordu þurh þæt translations þing in public/i18n.js.
-Giefan Rǣdes Lār
+
+## Giefan Rǣdes Lār
  * Senda Issue ymb þīnne willan oþþe þæt unriht þe þū funde.
  * Forca þis geweorc and wyrce nīwne telgor (swelce feature/new-feature).
  * Senda Pull Request and hine gebind wiþ þæt rihte Issue.
-Lēaf
+
+## Lēaf
 AGPL-3.0 Lēaf
 Eall riht gehalgod (c) 2025 quiettimejsg
