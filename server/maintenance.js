@@ -2,7 +2,7 @@ const db = require('./database');
 
 // 定义检查时间点（北京时间）
 const CHECK_TIMES = ['00:00', '00:30', '01:00'];
-const MAX_CHECK_INTERVAL_HOURS = 72;
+const MAX_CHECK_INTERVAL_HOURS = 1;
 
 // 获取当前北京时间
 function getBeijingTime() {
