@@ -28,15 +28,19 @@ if (!fs.existsSync(uploadsDir)) {
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, uploadsDir),
   filename: (req, file, cb) => {
+    try {
+      // 解码UTF-8编码的文件名
+      file.decodedOriginalName = decodeURIComponent(file.originalname);
+    } catch (err) {
+      // 解码失败时使用原始文件名
+      file.decodedOriginalName = file.originalname;
+    }
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, uniqueSuffix + path.extname(file.originalname));
+    cb(null, uniqueSuffix + path.extname(file.decodedOriginalName));
   }
 });
 
-const upload = multer({ 
-  storage,
-  limits: { fileSize: 10 * 1024 * 1024 } // 允许最大10MB的文件
-});
+const upload = multer({ storage });
 
 // 中间件
 // 添加全局请求日志中间件
@@ -47,6 +51,7 @@ app.use((req, res, next) => {
 
 app.use(cors({ credentials: true }));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../public')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 

@@ -3,26 +3,26 @@ cd /d %~dp0
 set NODE_ENV=production
 
 echo ==============================================
-echo          家庭通知系统 - 生产环境启动脚本
- echo ==============================================
+echo          Family Notification System - Production Environment Startup Script
+echo ==============================================
 
-echo [1/3] 验证Node.js环境...
+echo [1/3] Verifying Node.js environment...
 node -v >nul 2>&1
 if %errorlevel% neq 0 (
-    echo 错误：未找到Node.js环境，请先安装Node.js
+    echo Error: Node.js environment not found. Please install Node.js first.
     pause
     exit /b 1
 )
 
-echo [2/3] 设置生产环境变量...
+echo [2/3] Setting production environment variables...
 echo NODE_ENV=%NODE_ENV%
 
-echo [3/3] 启动应用服务...
+echo [3/3] Starting application service...
 node server/index.js
 
 if %errorlevel% neq 0 (
     echo ==============================================
-    echo 启动失败！请检查以上错误信息
+    echo Startup failed! Please check the error messages above.
     echo ==============================================
     pause
     exit /b %errorlevel%

@@ -191,6 +191,13 @@
                 text-overflow: ellipsis;
             }
 
+            #current-time {
+                font-size: 0.8rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
             .notification-item h3 {
                 font-size: 1rem;
                 margin-bottom: 5px;

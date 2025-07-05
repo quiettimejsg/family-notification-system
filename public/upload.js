@@ -35,7 +35,7 @@ function handleFileSelect(event) {
   }
   console.log('选择的文件数量:', newFiles.length);
   newFiles.forEach((file, index) => {
-    console.log(`文件 ${index + 1}:`, file.name, file.size, file.type);
+    console.log(`文件 ${index + 1}:`, file.name, file.type);
   });
   if (newFiles.length === 0) return;
 

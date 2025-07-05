@@ -81,9 +81,9 @@ const db = new sqlite3.Database('./notifications.db', (err) => {
           });
         });
       });
-      }
-    });
+    };
   });
+});
 
 module.exports = db;
 
@@ -95,7 +95,6 @@ module.exports = db;
       type TEXT NOT NULL,
       path TEXT NOT NULL,
       original_name TEXT NOT NULL,
-      size INTEGER NOT NULL DEFAULT 0,
       uploaded_at DATETIME,
       FOREIGN KEY(notification_id) REFERENCES notifications(id) ON DELETE CASCADE
     )
@@ -115,14 +114,6 @@ module.exports = db;
     
     const columnNames = columns.map(col => col.name);
     
-    // 添加size列（如果不存在）
-    if (!columnNames.includes('size')) {
-      db.run(`ALTER TABLE attachments ADD COLUMN size INTEGER NOT NULL DEFAULT 0`, (err) => {
-        if (err) console.error('添加size列错误:', err);
-        else console.log('成功添加size列');
-      });
-    }
-    
     // 添加uploaded_at列（如果不存在）
     if (!columnNames.includes('uploaded_at')) {
       // SQLite不允许添加带非常量默认值的列，分两步处理
@@ -139,7 +130,6 @@ module.exports = db;
       });
     }
   });
-  
-});
+  });
 
 module.exports = db;

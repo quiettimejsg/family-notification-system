@@ -81,7 +81,7 @@ function bindEvents() {
   console.log('FormData内容:');
   formData.forEach((value, key) => {
     if (key === 'files') {
-      console.log(`${key}:`, value.name, value.size);
+      console.log(`${key}:`, value.name);
     } else {
       console.log(`${key}:`, value);
     }
@@ -91,11 +91,11 @@ function bindEvents() {
   console.log('提交时的文件列表:', selectedFiles);
     console.log('提交时的文件数量:', selectedFiles.length);
     selectedFiles.forEach((file, index) => {
-      console.log(`提交的文件 ${index + 1}:`, file.name, file.type, file.size);
+      console.log(`提交的文件 ${index + 1}:`, file.name, file.type);
     });
   selectedFiles.forEach((file, index) => {
-    console.log(`添加文件 ${index + 1}:`, file.name, file.size);
-    formData.append('files', file);
+    console.log(`添加文件 ${index + 1}:`, file.name);
+    formData.append('files[]', file);
   });
 
   try {

@@ -25,6 +25,24 @@ let currentFileIndex = 0;
 let currentFiles = [];
 
 // 显示文件到模态框
+function getFileIcon(fileType) {
+    const iconMap = {
+        'image': 'fa-file-image-o',
+        'video': 'fa-file-video-o',
+        'audio': 'fa-file-audio-o',
+        'text': 'fa-file-text-o',
+        'application/pdf': 'fa-file-pdf-o',
+        'application/msword': 'fa-file-word-o',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'fa-file-word-o',
+        'application/vnd.ms-excel': 'fa-file-excel-o',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'fa-file-excel-o',
+        'application/vnd.ms-powerpoint': 'fa-file-powerpoint-o',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation': 'fa-file-powerpoint-o'
+    };
+    const type = fileType.split('/')[0];
+    return iconMap[fileType] || iconMap[type] || 'fa-file-o';
+}
+
 function showFileInModal(index) {
   const mediaContainer = fullscreenModal.querySelector('.media-container');
   const fileNameEl = fullscreenModal.querySelector('.file-name');

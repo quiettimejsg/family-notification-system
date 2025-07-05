@@ -17,6 +17,10 @@ export function initUI() {
 
   // 监听语言变化事件更新日期
   window.addEventListener('languagechange', displayCurrentDate);
+
+  // 初始化时间显示并设置更新间隔
+  updateCurrentTime();
+  setInterval(updateCurrentTime, 10);
 }
 
 // 绑定UI事件处理函数
@@ -63,4 +67,21 @@ export function displayCurrentDate() {
 
   const dateString = new Date().toLocaleDateString(langState.current, options);
   dateElement.textContent = dateString;
+}
+
+// 显示当前时间（带毫秒）
+function updateCurrentTime() {
+  const timeElement = document.getElementById('current-time');
+  if (!timeElement) return;
+
+  const options = {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    fractionalSecondDigits: 3,
+    hour12: false
+  };
+
+  const timeString = new Date().toLocaleTimeString(langState.current, options);
+  timeElement.textContent = timeString;
 }

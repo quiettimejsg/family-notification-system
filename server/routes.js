@@ -10,9 +10,11 @@ module.exports = (app, upload) => {
 // 修改文件上传路径处理
 app.post('/api/notifications', (req, res, next) => {
   upload.array('files[]')(req, res, (err) => {
-    if (err) {
-      return res.status(400).json({ error: err.message });
-    }
+    if (err) {      
+      console.error('文件上传错误详情:', 
+        { message: err.message, code: err.code, stack: err.stack });      
+        return res.status(400).json({ error: err.message, code: err.code });    
+      }
     next();
   });
 }, async (req, res) => {
@@ -21,7 +23,7 @@ app.post('/api/notifications', (req, res, next) => {
     const files = req.files || [];
     console.log('接收到的文件数量:', files.length);
     files.forEach((file, index) => {
-      console.log(`文件 ${index + 1}:`, file.originalname, file.size, file.mimetype);
+      console.log(`文件 ${index + 1}:`, file.originalname, file.mimetype);
     });
     
     // 插入通知
@@ -39,7 +41,7 @@ app.post('/api/notifications', (req, res, next) => {
     // 处理附件
     if (files.length > 0) {
       const stmt = db.prepare(
-        'INSERT INTO attachments (notification_id, type, path, original_name, size, uploaded_at) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)'
+        'INSERT INTO attachments (notification_id, type, path, original_name, uploaded_at) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)'
       );
       
       const promises = files.map(file => {
@@ -50,7 +52,7 @@ app.post('/api/notifications', (req, res, next) => {
           else if (file.mimetype.startsWith('audio/')) fileType = 'audio';
           else if (file.mimetype === 'application/pdf') fileType = 'document';
           
-          stmt.run(notificationId, fileType, file.filename, file.originalname, file.size || 0, (err) => {
+          stmt.run(notificationId, fileType, file.filename, file.decodedOriginalName || file.originalname || 0, (err) => {
             if (err) reject(err);
             else resolve();
           });
