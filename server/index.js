@@ -24,6 +24,9 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
+// 提供uploads目录静态文件访问
+app.use('/uploads', express.static(uploadsDir));
+
 // 设置文件上传
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, uploadsDir),

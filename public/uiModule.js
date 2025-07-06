@@ -71,7 +71,7 @@ export function displayCurrentDate() {
 
 // 显示当前时间（带毫秒）
 function updateCurrentTime() {
-  const timeElement = document.getElementById('current-time');
+  const timeElement = document.getElementById('system-current-time');
   if (!timeElement) return;
 
   const options = {

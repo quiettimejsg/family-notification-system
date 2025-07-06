@@ -5,6 +5,22 @@ const cheerio = require('cheerio');
 console.log('天气模块依赖加载状态: axios=%s, cheerio=%s', !!axios, !!cheerio);
 
 module.exports = (app, upload) => {
+  // 获取所有音频文件
+  app.get('/api/audio-files', async (req, res) => {
+    try {
+      const audioFiles = await new Promise((resolve, reject) => {
+        db.all(
+          'SELECT id, original_name, path, uploaded_at FROM attachments WHERE type = ?',
+          ['audio'],
+          (err, rows) => err ? reject(err) : resolve(rows)
+        );
+      });
+      res.json(audioFiles);
+    } catch (err) {
+      console.error('获取音频文件错误:', err);
+      res.status(500).json({ error: '获取音频文件失败: ' + err.message });
+    }
+  });
   
   // 创建通知
 // 修改文件上传路径处理

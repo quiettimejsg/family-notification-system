@@ -90,6 +90,169 @@
             display: flex;
             min-height: 600px;
         }
+        /* 音乐播放器样式 */
+.music-player {
+    background-color: var(--light);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    font-family: inherit;
+    position: fixed; /* 设置为固定定位 */
+    bottom: 0; /* 定位到页面底部 */
+    left: 50%; /* 水平居中开始 */
+    transform: translateX(-50%); /* 精确水平居中 */
+    width: calc(100% - 40px); /* 宽度减去左右margin */
+    box-sizing: border-box; /* 确保padding和border不增加宽度 */
+    z-index: 100; /* 设置层级，确保在其他元素之上 */
+}
+
+.player-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.player-controls button {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 18px;
+}
+
+.player-controls button:hover {
+    background-color: var(--secondary);
+    transform: scale(1.05);
+}
+
+.time-display {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 6px;
+    appearance: none;
+    background-color: #e0e0e0;
+    border-radius: 3px;
+    outline: none;
+}
+
+.progress-bar::-webkit-slider-thumb {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: var(--primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.progress-bar::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    background-color: var(--secondary);
+}
+
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 15px;
+}
+
+.volume-bar {
+    width: 80px;
+    height: 6px;
+    appearance: none;
+    background-color: #e0e0e0;
+    border-radius: 3px;
+    outline: none;
+}
+
+.volume-bar::-webkit-slider-thumb {
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: var(--primary);
+    cursor: pointer;
+}
+
+.audio-playlist {
+    list-style: none;
+    margin-top: 20px;
+    max-height: 200px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.audio-playlist li {
+    padding: 12px 18px;
+    margin-bottom: 10px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+}
+
+.audio-playlist li:before {
+    content: '♪';
+    margin-right: 12px;
+    color: var(--primary);
+    opacity: 0.7;
+    font-size: 1.1rem;
+}
+
+.audio-playlist li:hover {
+    background-color: #f8f9fa;
+    transform: translateX(6px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+}
+
+.audio-playlist li.active {
+    background-color: var(--primary);
+    color: white;
+    box-shadow: 0 4px 10px rgba(78, 84, 200, 0.3);
+}
+
+.audio-playlist li.active:before {
+    color: white;
+    opacity: 1;
+}
+
+/* 滚动条样式优化 */
+.audio-playlist::-webkit-scrollbar {
+    width: 6px;
+}
+
+.audio-playlist::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.audio-playlist::-webkit-scrollbar-thumb {
+    background: #bbb;
+    border-radius: 10px;
+}
+
+.audio-playlist::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+}
 
         @media (max-width: 768px) {
             .main-content {
@@ -132,6 +295,21 @@
             body {
                 padding: 10px;
             }
+                .music-player {
+        margin: 10px;
+        padding: 15px;
+    }
+    
+    .player-controls {
+        flex-wrap: wrap;
+    }
+    
+    .volume-control {
+        margin-left: 0;
+        margin-top: 10px;
+        width: 100%;
+        justify-content: flex-end;
+    }
         }
 
         @media (max-width: 480px) {
@@ -246,6 +424,15 @@
                 font-size: 0.95rem;
                 padding: 0 10px;
             }
+                .player-controls button {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+    
+    .time-display {
+        font-size: 0.9rem;
+    }
         }
         
         .notification-form {
@@ -298,7 +485,7 @@
         
         .priority-btn {
             flex: 1;
-            padding: 12px;
+           padding: 12px;
             border: 1px solid var(--border);
             border-radius: 8px;
             cursor: pointer;
