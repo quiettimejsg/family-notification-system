@@ -20,6 +20,17 @@ class MusicPlayer {
     this.durationDisplay = document.getElementById('duration');
     this.volumeBar = document.getElementById('volume-bar');
     this.audioPlaylist = document.getElementById('audio-playlist');
+    // 添加隐藏/显示按钮
+    this.hideBtn = document.createElement('button');
+    this.hideBtn.id = 'hide-player-btn';
+    this.hideBtn.textContent = '⇧';
+    this.hideBtn.style.position = 'fixed';
+    this.hideBtn.style.bottom = '20px';
+    this.hideBtn.style.right = '20px';
+    this.hideBtn.style.zIndex = '1000';
+    this.hideBtn.style.padding = '8px 16px';
+    this.hideBtn.style.cursor = 'pointer';
+    document.body.appendChild(this.hideBtn);
   }
 
   // 绑定事件监听
@@ -46,6 +57,8 @@ class MusicPlayer {
     this.audioPlaylist.addEventListener('change', (e) => {
       this.selectTrack(parseInt(e.target.value));
     });
+    // 添加隐藏/显示按钮事件
+    this.hideBtn.addEventListener('click', () => this.toggleVisibility());
   }
 
   // 加载音频文件列表
@@ -197,6 +210,13 @@ class MusicPlayer {
   }
 
   // 选择播放列表中的曲目
+  // 切换播放器显示/隐藏
+  toggleVisibility() {
+    const isHidden = this.playerContainer.style.display === 'none';
+    this.playerContainer.style.display = isHidden ? 'block' : 'none';
+    this.hideBtn.textContent = isHidden ? '⇩' : '⇧';
+  }
+
   selectTrack(index) {
     this.loadTrack(index);
     if (!this.isPlaying) {
