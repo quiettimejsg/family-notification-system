@@ -15,7 +15,27 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            flex-wrap: wrap; /* 允许分页项换行 */
+            gap: 5px; /* 设置间距 */
+        }
+        .pagination button {
+            background: rgba(177, 154, 154, 0.2);
+            border: none;
+            color: rgb(213, 139, 223);
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+        .pagination button:hover, .pagination button.active {
+            background: rgba(204, 140, 140, 0.4);
+        }
         body {
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
@@ -101,7 +121,7 @@
     position: absolute; /* 设置为固定定位 */
     bottom: 0; /* 定位到页面底部 */
     justify-content: center;
-    left: 50%;
+    left: 12%;
     transform: translateX(-50%); /* 精确水平居中 */
     box-sizing: border-box; /* 确保padding和border不增加宽度 */
     z-index: 100; /* 设置层级，确保在其他元素之上 */
@@ -286,15 +306,22 @@
                 padding: 10px;
             }
             .music-player {
+                position: fixed;
+                left:20%;
         margin: 10px;
         padding: 15px;
-        min-width: 65%;
+        min-width: 30%;
         white-space: nowrap;
     }
     
     .player-controls {
         flex-wrap: wrap;
     }
+        }
+        @media (max-width: 601px) {
+            .music-player {
+                left: 30%;
+            }
         }
 
         @media (max-width: 480px) {
@@ -417,6 +444,17 @@
     
     .time-display {
         font-size: 0.9rem;
+    }
+    .music-player {
+        position: fixed;
+        left: 50%;
+        margin: 10px;
+        padding: 15px;
+        min-width: 30%;
+        white-space: nowrap;
+    }
+    .player-controls {
+        flex-wrap: wrap;
     }
         }
         
@@ -1026,6 +1064,13 @@
                 border-right: none;
                 border-bottom: 1px solid var(--border);
             }
+            .pagination {
+                margin-top: 15px;
+            }
+            .pagination button {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
         }
         
         @media (max-width: 480px) {
@@ -1060,6 +1105,13 @@
             font-size: 0.8rem;
             max-width: 40px;
         }
+            .pagination {
+                margin-top: 10px;
+            }
+            .pagination button {
+                padding: 4px 8px;
+                font-size: 0.7rem;
+            }
         }
 
 .list-header {
@@ -1119,14 +1171,7 @@
   max-height: calc(100vh - 200px);
   overflow-y: auto;
 }
-@media (max-width: 320px) {
-.music-player {
-    margin: 10px;
-    padding: 15px;
-    min-width: 80%;
-    white-space: nowrap;
-}
-}
+
 
 @font-face {
     font-family: 'LXGWWenKaiGB';

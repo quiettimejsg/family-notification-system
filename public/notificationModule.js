@@ -1,11 +1,13 @@
 import { translations } from './i18n.js';
 import { resetSelectedFiles, selectedFiles } from './upload.js';
-  import { langState } from './i18n.js';
+import { langState } from './i18n.js';
 
 
 let addRecordModal;
 let addRecordForm;
 let priorityBtns;
+let currentPage = 1;
+const itemsPerPage = 1; // 每页显示的通知数量
 
 // 初始化通知模块
 export function initNotifications() {
@@ -18,7 +20,7 @@ export function initNotifications() {
   bindEvents();
 
   // 初始加载通知
-  loadNotifications();
+  loadNotifications(1);
 
   // 监听语言变化事件
   window.addEventListener('languagechange', () => {
@@ -134,7 +136,7 @@ function bindEvents() {
           resetSelectedFiles();
           priorityBtns.forEach(b => b.classList.remove('active'));
           document.querySelector('.low-priority-btn')?.classList.add('active');
-          loadNotifications(); // 刷新通知列表
+          loadNotifications(1); // 刷新通知列表并返回第一页
         } else {
           let errorMessage = translations['error-adding-notification'][langState.current];
           try {
@@ -161,18 +163,31 @@ function bindEvents() {
 }
 
 // 加载通知列表
-export async function loadNotifications() {
+export async function loadNotifications(page = currentPage) {
   try {
     const container = document.getElementById('notificationsContainer');
     if (!container) return;
 
     container.innerHTML = `<div class="loading-text">${translations['loading'][langState.current] || 'Loading...'}</div>`;
+    // 移除旧的分页控件
+    const oldPagination = document.querySelector('.pagination');
+    if (oldPagination) oldPagination.remove();
 
+    // 获取所有通知数据进行前端分页
     const response = await fetch('/api/notifications');
     if (!response.ok) throw new Error(translations['network-error'][langState.current]);
 
-    const notifications = await response.json();
-    renderNotifications(notifications);
+    const allNotifications = await response.json();
+    const totalNotifications = allNotifications.length;
+    const totalPages = Math.ceil(totalNotifications / itemsPerPage);
+    
+    // 计算当前页数据的起始和结束索引
+    const startIndex = (page - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const currentPageNotifications = allNotifications.slice(startIndex, endIndex);
+    
+    currentPage = page; // 更新当前页码
+    renderNotifications(currentPageNotifications, totalPages);
   } catch (error) {
     console.error('加载通知错误:', error);
     const container = document.getElementById('notificationsContainer');
@@ -183,7 +198,7 @@ export async function loadNotifications() {
 }
 
 // 渲染通知列表
-function renderNotifications(notifications) {
+function renderNotifications(notifications, totalPages) {
   const container = document.getElementById('notificationsContainer');
   if (!container) return;
 
@@ -267,6 +282,34 @@ function renderNotifications(notifications) {
   });
 
   container.innerHTML = html;
+
+  // 生成分页控件
+  if (totalPages > 1) {
+    const paginationHtml = `
+      <div class="pagination">
+        <button class="page-btn ${currentPage === 1 ? 'disabled' : ''}" data-page="${currentPage - 1}">
+          ${translations['pagination-prev']?.[langState.current] || '<'}
+        </button>
+        ${Array.from({ length: totalPages }, (_, i) => i + 1).map(page => `
+          <button class="page-btn ${currentPage === page ? 'active' : ''}" data-page="${page}">${page}</button>
+        `).join('')}
+        <button class="page-btn ${currentPage === totalPages ? 'disabled' : ''}" data-page="${currentPage + 1}">
+          ${translations['pagination-next']?.[langState.current] || '>'}
+        </button>
+      </div>
+    `;
+    container.insertAdjacentHTML('afterend', paginationHtml);
+
+    // 绑定分页按钮事件
+    document.querySelectorAll('.page-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const page = parseInt(e.target.dataset.page);
+        if (page >= 1 && page <= totalPages) {
+          loadNotifications(page);
+        }
+      });
+    });
+  }
 }
 
 // 显示状态信息
