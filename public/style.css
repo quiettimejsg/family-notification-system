@@ -98,13 +98,15 @@
     margin: 20px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     font-family: inherit;
-    position: fixed; /* 设置为固定定位 */
+    position: absolute; /* 设置为固定定位 */
     bottom: 0; /* 定位到页面底部 */
-    left: 50%; /* 水平居中开始 */
+    justify-content: center;
+    left: 50%;
     transform: translateX(-50%); /* 精确水平居中 */
-    width: calc(100% - 40px); /* 宽度减去左右margin */
     box-sizing: border-box; /* 确保padding和border不增加宽度 */
     z-index: 100; /* 设置层级，确保在其他元素之上 */
+    max-width: 300px;
+    white-space: nowrap;
 }
 
 .player-controls {
@@ -112,6 +114,8 @@
     align-items: center;
     gap: 15px;
     margin-bottom: 20px;
+    justify-content: center;
+    white-space: nowrap;
 }
 
 .player-controls button {
@@ -132,6 +136,11 @@
 .player-controls button:hover {
     background-color: var(--secondary);
     transform: scale(1.05);
+}
+
+.progress-container {
+    display: flex;
+    justify-content: center;
 }
 
 .time-display {
@@ -165,37 +174,13 @@
     background-color: var(--secondary);
 }
 
-.volume-control {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-left: 15px;
-}
-
-.volume-bar {
-    width: 80px;
-    height: 6px;
-    appearance: none;
-    background-color: #e0e0e0;
-    border-radius: 3px;
-    outline: none;
-}
-
-.volume-bar::-webkit-slider-thumb {
-    appearance: none;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background-color: var(--primary);
-    cursor: pointer;
-}
-
 .audio-playlist {
     list-style: none;
     margin-top: 20px;
     max-height: 200px;
     overflow-y: auto;
     padding-right: 10px;
+    max-width: 75%;
 }
 
 .audio-playlist li {
@@ -295,20 +280,15 @@
             body {
                 padding: 10px;
             }
-                .music-player {
+            .music-player {
         margin: 10px;
         padding: 15px;
+        min-width: 65%;
+        white-space: nowrap;
     }
     
     .player-controls {
         flex-wrap: wrap;
-    }
-    
-    .volume-control {
-        margin-left: 0;
-        margin-top: 10px;
-        width: 100%;
-        justify-content: flex-end;
     }
         }
 
@@ -1134,6 +1114,15 @@
   max-height: calc(100vh - 200px);
   overflow-y: auto;
 }
+@media (max-width: 320px) {
+.music-player {
+    margin: 10px;
+    padding: 15px;
+    min-width: 80%;
+    white-space: nowrap;
+}
+}
+
 @font-face {
     font-family: 'LXGWWenKaiGB';
     src: url('LXGWWenKaiGB-Regular.woff2') format('woff2');

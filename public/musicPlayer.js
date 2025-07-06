@@ -19,7 +19,7 @@ class MusicPlayer {
     this.currentTimeDisplay = document.getElementById('current-time');
     this.durationDisplay = document.getElementById('duration');
     this.volumeBar = document.getElementById('volume-bar');
-    this.playlistContainer = document.getElementById('audio-playlist');
+    this.audioPlaylist = document.getElementById('audio-playlist');
   }
 
   // 绑定事件监听
@@ -43,7 +43,9 @@ class MusicPlayer {
       console.error('错误代码:', this.audioElement.error?.code);
     });
     this.progressBar.addEventListener('input', () => this.seek());
-    this.volumeBar.addEventListener('input', () => this.setVolume());
+    this.audioPlaylist.addEventListener('change', (e) => {
+      this.selectTrack(parseInt(e.target.value));
+    });
   }
 
   // 加载音频文件列表
@@ -66,15 +68,15 @@ class MusicPlayer {
 
   // 渲染播放列表
   renderPlaylist() {
-    if (!this.playlistContainer) return;
-    this.playlistContainer.innerHTML = '';
+    if (!this.audioPlaylist) return;
+    this.audioPlaylist.innerHTML = '';
 
     this.playlist.forEach((track, index) => {
-      const li = document.createElement('li');
-      li.textContent = track.original_name;
-      li.classList.toggle('active', index === this.currentTrackIndex);
-      li.addEventListener('click', () => this.selectTrack(index));
-      this.playlistContainer.appendChild(li);
+      const option = document.createElement('option');
+      option.value = index;
+      option.textContent = track.original_name;
+      option.selected = index === this.currentTrackIndex;
+      this.audioPlaylist.appendChild(option);
     });
   }
 
@@ -211,24 +213,18 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!document.getElementById('music-player')) {
     const playerHTML = `
       <div id="music-player" class="music-player">
-        <h2>♪</h2>
         <div class="player-controls">
           <button id="prev-btn"><</button>
-          <button id="play-btn">▶</button>
-          <button id="next-btn">></button>
+            <button id="play-btn">▶</button>
+            <button id="next-btn">></button>
         </div>
         <div class="progress-container">
           <span id="current-time">0:00</span>
           <input type="range" id="progress-bar" min="0" max="100" value="0">
           <span id="duration">0:00</span>
         </div>
-        <div class="volume-control">
-          <label for="volume-bar">🔊</label>
-          <input type="range" id="volume-bar" min="0" max="1" step="0.1" value="1">
-        </div>
         <div class="playlist-container">
-          <h3>↹</h3>
-          <ul id="audio-playlist"></ul>
+          <select id="audio-playlist" class="playlist-select" style="width: 100%; padding: 5px; margin-top: 10px;"></select>
         </div>
       </div>
     `;
