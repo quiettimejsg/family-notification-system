@@ -37,7 +37,7 @@ class MusicPlayer {
   bindEvents() {
     if (!this.playBtn) return;
 
-    this.playBtn.addEventListener('click', () => this.togglePlay());
+    // 移除重复的播放按钮事件绑定
     this.prevBtn.addEventListener('click', () => this.prevTrack());
     this.nextBtn.addEventListener('click', () => this.nextTrack());
     this.audioElement.addEventListener('timeupdate', () => this.updateProgress());
@@ -55,28 +55,44 @@ class MusicPlayer {
     });
     this.progressBar.addEventListener('input', () => this.seek());
     this.audioPlaylist.addEventListener('change', (e) => {
-      this.selectTrack(parseInt(e.target.value));
+      this.userInitiatedPlay(parseInt(e.target.value));
+    });
+    // 添加播放按钮点击事件以支持用户触发加载
+    this.playBtn.addEventListener('click', () => {
+      if (this.audioElement.src === '' && this.playlist.length > 0) {
+        this.userInitiatedPlay(0);
+      } else {
+        this.togglePlay();
+      }
     });
     // 添加隐藏/显示按钮事件
     this.hideBtn.addEventListener('click', () => this.toggleVisibility());
   }
 
   // 加载音频文件列表
+  // 初始加载仅获取播放列表，不自动加载音频
   async loadAudioFiles() {
     try {
       const response = await fetch('/api/audio-files');
       if (!response.ok) throw new Error('无法获取音频文件列表');
       this.playlist = await response.json();
       this.renderPlaylist();
-      if (this.playlist.length > 0) {
-        this.currentTrackIndex = 0;
-        this.loadTrack(0);
-      } else {
-        console.log('没有找到音频文件');
-      }
+      // 移除自动加载第一首音频的逻辑
+      console.log('播放列表加载完成，等待用户选择播放');
     } catch (err) {
       console.error('加载音频文件失败:', err);
     }
+  }
+
+  // 添加用户触发的播放方法
+  userInitiatedPlay(index = 0) {
+    if (this.playlist.length === 0) {
+      console.log('播放列表为空');
+      return;
+    }
+    this.currentTrackIndex = index;
+    this.loadTrack(index);
+    this.togglePlay();
   }
 
   // 渲染播放列表
@@ -170,7 +186,6 @@ class MusicPlayer {
   // 更新进度条
   updateProgress() {
     // 添加调试日志
-    console.log('更新进度 - currentTime:', this.audioElement.currentTime, 'duration:', this.audioElement.duration);
     if (isNaN(this.audioElement.currentTime)) {
       console.log('currentTime为NaN，无法更新进度');
       return;
@@ -179,7 +194,6 @@ class MusicPlayer {
     this.progressBar.value = percent || 0;
     const formattedTime = this.formatTime(this.audioElement.currentTime);
     this.currentTimeDisplay.textContent = formattedTime;
-    console.log('更新显示时间:', formattedTime);
   }
 
   // 更新总时长
