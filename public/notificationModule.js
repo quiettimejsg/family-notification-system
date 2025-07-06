@@ -7,7 +7,7 @@ let addRecordModal;
 let addRecordForm;
 let priorityBtns;
 let currentPage = 1;
-const itemsPerPage = 1; // 每页显示的通知数量
+const itemsPerPage = 3; // 每页显示的通知数量
 
 // 初始化通知模块
 export function initNotifications() {
