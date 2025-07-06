@@ -127,7 +127,7 @@ class MusicPlayer {
     } else {
       this.audioElement.play()
         .then(() => {
-          this.playBtn.textContent = '⏸';
+          this.playBtn.textContent = '||';
           this.isPlaying = true;
         })
         .catch(err => {
