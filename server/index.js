@@ -55,6 +55,7 @@ app.use((req, res, next) => {
 app.use(cors({ credentials: true }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(compression());
 app.use(express.static(path.join(__dirname, '../public')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -95,12 +96,30 @@ process.on('unhandledRejection', (reason, promise) => {
   console.error(`[服务器错误] 未处理的Promise拒绝:`, reason);
 });
 
-// 启动服务器
-console.log('准备启动服务器...');
-app.listen(3000, '0.0.0.0', () => {
-  console.log('服务器启动成功，正在监听端口 3000');
-  console.log('服务器地址: http://0.0.0.0:3000');
+// 启动HTTPS服务器
+const https = require('https');
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
+
+// 证书配置（请确保证书文件存在或替换为正确路径）
+const options = {
+  key: fs.readFileSync(path.join(__dirname, 'cert', 'key.pem')),
+  cert: fs.readFileSync(path.join(__dirname, 'cert', 'cert.pem'))
+};
+
+// 创建HTTPS服务器
+https.createServer(options, app).listen(443, '0.0.0.0', () => {
+  console.log('HTTPS服务器启动成功，正在监听端口 443');
+  console.log('服务器地址: https://0.0.0.0:443');
   console.log('数据库连接状态: 已连接');
-  // 初始化维护任务
   maintenance.initMaintenance();
+});
+
+// 创建HTTP服务器用于重定向到HTTPS
+http.createServer((req, res) => {
+  res.writeHead(301, { 'Location': 'https://' + req.headers.host + req.url });
+  res.end();
+}).listen(80, '0.0.0.0', () => {
+  console.log('HTTP服务器启动成功，正在监听端口 80，并重定向到HTTPS');
 });

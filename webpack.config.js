@@ -2,6 +2,12 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
+  mode: 'production',
+  optimization: {
+    splitChunks: {
+      chunks: 'all'
+    }
+  },
   entry: './public/script.js',
   output: {
     filename: 'bundle.[contenthash].js',
