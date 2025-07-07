@@ -17,16 +17,6 @@ if %errorlevel% neq 0 (
 echo [2/3] Setting production environment variables...
 echo NODE_ENV=%NODE_ENV%
 
-echo [2.5/3] Building application with webpack...
-npm run build
-if %errorlevel% neq 0 (
-    echo ==============================================
-    echo Build failed! Please check the error messages above.
-    echo ==============================================
-    pause
-    exit /b %errorlevel%
-)
-
 echo [3/3] Starting application service...
 node server/index.js
 
